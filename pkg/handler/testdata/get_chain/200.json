@@ -1,0 +1,32 @@
+{
+  "page": 0,
+  "size": 50,
+  "sort": "",
+  "total": 3,
+  "data": [
+    {
+      "id": 1,
+      "name": "Ethereum",
+      "symbol": "ETH",
+      "chain_id": 1,
+      "scan_url": "",
+      "is_evm": true
+    },
+    {
+      "id": 2,
+      "name": "Fantom Opera",
+      "symbol": "FTM",
+      "chain_id": 250,
+      "scan_url": "",
+      "is_evm": true
+    },
+    {
+      "id": 3,
+      "name": "Optimism",
+      "symbol": "OP",
+      "chain_id": 10,
+      "scan_url": "",
+      "is_evm": true
+    }
+  ]
+}

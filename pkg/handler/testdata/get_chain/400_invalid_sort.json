@@ -1,0 +1,20 @@
+{
+  "data": null,
+  "error": "Key: 'GetChainsQuery.Sort' Error:Field validation for 'Sort' failed on the 'oneof' tag",
+  "errors": [
+      {
+          "field": "Sort",
+          "msg": "Field validation for 'Sort' failed on the 'oneof' tag",
+          "enums": [
+              "name",
+              "-name",
+              "symbol",
+              "-symbol",
+              "chain_id",
+              "-chain_id",
+              "is_evm",
+              "-is_evm"
+          ]
+      }
+  ]
+}

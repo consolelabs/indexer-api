@@ -1,0 +1,16 @@
+- id: 1
+  name: paintswap
+  url: https://paintswap.finance/
+  icon_url: https://storage.googleapis.com/console-indexer/marketplaces/paintswap.png
+- id: 2
+  name: nftkey
+  url: https://nftkey.app/
+  icon_url: https://storage.googleapis.com/console-indexer/marketplaces/nftkey.png
+- id: 3
+  name: opensea
+  url: https://opensea.io/
+  icon_url: https://storage.googleapis.com/console-indexer/marketplaces/opensea.png
+- id: 4
+  name: quixotic
+  url: https://quixotic.io/
+  icon_url: https://storage.googleapis.com/console-indexer/marketplaces/quixotic.png

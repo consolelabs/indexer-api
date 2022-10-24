@@ -1,0 +1,108 @@
+{
+  "data": {
+    "token_id": "1",
+    "collection_address": "0x7aCeE5D0acC520faB33b3Ea25D4FEEF1FfebDE73",
+    "name": "Cyber Neko 1",
+    "description": "Cyber Neko NFT",
+    "amount": "",
+    "image": "https://storage.googleapis.com/cyber-neko/genesis-collection/full/1",
+    "image_cdn": "https://storage.googleapis.com/cyber-neko/genesis-collection/thumb/1",
+    "thumbnail_cdn": "",
+    "image_content_type": "",
+    "attributes": [
+      {
+        "trait_type": "mask",
+        "value": "None",
+        "count": 6556,
+        "rarity": "Common",
+        "frequency": "99.36%"
+      },
+      {
+        "trait_type": "earring",
+        "value": "None",
+        "count": 4965,
+        "rarity": "Common",
+        "frequency": "82.36%"
+      },
+      {
+        "trait_type": "eyewear",
+        "value": "None",
+        "count": 4629,
+        "rarity": "Common",
+        "frequency": "81.13%"
+      },
+      {
+        "trait_type": "fur",
+        "value": "None",
+        "count": 4041,
+        "rarity": "Common",
+        "frequency": "71.12%"
+      },
+      {
+        "trait_type": "necklace",
+        "value": "None",
+        "count": 4024,
+        "rarity": "Common",
+        "frequency": "72.29%"
+      },
+      {
+        "trait_type": "body",
+        "value": "White",
+        "count": 894,
+        "rarity": "Common",
+        "frequency": "15.49%"
+      },
+      {
+        "trait_type": "eyes",
+        "value": "Tired Eyes",
+        "count": 390,
+        "rarity": "Uncommon",
+        "frequency": "5.61%"
+      },
+      {
+        "trait_type": "mouth",
+        "value": "Bearded",
+        "count": 118,
+        "rarity": "Mythic",
+        "frequency": "0.59%"
+      },
+      {
+        "trait_type": "background",
+        "value": "Paw Pattern",
+        "count": 92,
+        "rarity": "Uncommon",
+        "frequency": "1.07%"
+      },
+      {
+        "trait_type": "hat",
+        "value": "Playboy",
+        "count": 68,
+        "rarity": "Rare",
+        "frequency": "0.48%"
+      },
+      {
+        "trait_type": "clothe",
+        "value": "Japanese Uniform",
+        "count": 67,
+        "rarity": "Rare",
+        "frequency": "0.47%"
+      }
+    ],
+    "rarity": {
+      "rank": 914,
+      "score": "3.658723",
+      "total": 6666,
+      "rarity": "Epic"
+    },
+    "owner": {
+      "owner_address": "0xD28Cf82b9B8ee25E3C82923aDF6aA6CC2f220932",
+      "collection_address": "0x7aCeE5D0acC520faB33b3Ea25D4FEEF1FfebDE73",
+      "token_id": "1",
+      "chain_id": 250,
+      "token": null,
+      "created_time": "0001-01-01T00:00:00Z",
+      "last_updated_time": "0001-01-01T00:00:00Z"
+    },
+    "marketplace": []
+  }
+}

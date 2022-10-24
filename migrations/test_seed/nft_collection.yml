@@ -1,0 +1,36 @@
+- id: 204
+  created_time: '2022-07-05 07:40:40.794997'
+  last_updated_time: '2022-07-05 07:40:40.794997'
+  address: RAW='0x7aCeE5D0acC520faB33b3Ea25D4FEEF1FfebDE73'
+  name: Cyber Neko
+  symbol: NEKO
+  chain_id: 250
+  supply: 6666
+  erc_format: ERC721
+  is_rarity_calculated: false
+  image: https://storage.googleapis.com/cyber-neko/genesis-collection/full/1
+  description: Cyber Neko is a 6,666 uniquely, programmatically generated, cute and
+    collectible Cyber Neko with proof of ownership stored on the Fantom blockchain.
+  contract_scan: ''
+  discord: https://discord.gg/QDWZCSR6E2
+  twitter: https://twitter.com/pod_town
+  website: https://pod.so/
+  is_notify_synced: true
+- id: 238
+  created_time: '2022-07-06 05:39:54.519934'
+  last_updated_time: '2022-07-06 05:39:54.519934'
+  address: RAW='0x3b3D588A88b95fb5553Acc2533Cfc9DEfF1d96B6'
+  name: Cyber Neko Xmas Edition
+  symbol: NEKO-XMAS
+  chain_id: 250
+  supply: 292
+  erc_format: ERC721
+  is_rarity_calculated: false
+  image: https://storage.googleapis.com/cyber-neko/xmas-collection/1
+  description: Christmas is coming to Pod Town, those are special Cyber Nekos that
+    were minted using original Neko to celebrate the holiday spirit.
+  contract_scan: ''
+  discord: https://discord.gg/pod-town
+  twitter: https://twitter.com/@pod_town
+  website: https://pod.town
+  is_notify_synced: false

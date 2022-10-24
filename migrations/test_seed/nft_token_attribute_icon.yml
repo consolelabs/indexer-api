@@ -1,0 +1,66 @@
+- id: 1
+  trait_type: Background
+  discord_icon: "<:background:993472707725369375>"
+  unicode_icon: "\U0001F5BC️"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 2
+  trait_type: Body
+  discord_icon: "<:body:993472705833746452>"
+  unicode_icon: "\U0001F3BD"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 9
+  trait_type: Clothe
+  discord_icon: "<:clothe:993472698518884363>"
+  unicode_icon: "\U0001F94B"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 20
+  trait_type: Earring
+  discord_icon: "<:earring:993472692848164884>"
+  unicode_icon: "✨"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 3
+  trait_type: Eyes
+  discord_icon: "<:eyes:993472704080515092>"
+  unicode_icon: "\U0001F441"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 7
+  trait_type: Eyewear
+  discord_icon: "<:eyewear:993472702490886374>"
+  unicode_icon: "\U0001F453"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 23
+  trait_type: Fur
+  discord_icon: "<:fur:993472690700693565>"
+  unicode_icon: "✨"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 14
+  trait_type: Hat
+  discord_icon: "<:hat:993472696853725248>"
+  unicode_icon: "\U0001F3A9"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 17
+  trait_type: Mask
+  discord_icon: "<:mask:993472694890811424>"
+  unicode_icon: "\U0001F479"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 8
+  trait_type: Mouth
+  discord_icon: "<:mouth:993472700754436136>"
+  unicode_icon: "\U0001F445"
+  created_at: '2022-07-12 09:39:18.899276'
+  updated_at: '2022-07-12 09:39:18.899276'
+- id: 453
+  trait_type: Necklace
+  discord_icon: ":prayer_beads:"
+  unicode_icon: "\U0001F4FF"
+  created_at: '2022-07-18 08:55:25.19276'
+  updated_at: '2022-07-18 08:55:25.19276'

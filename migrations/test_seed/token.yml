@@ -1,0 +1,11 @@
+- id: 1
+  created_time: '2022-07-19 13:49:51.977247'
+  last_updated_time: '2022-07-19 13:49:51.977247'
+  symbol: FTM
+  name: Fantom
+  chain_id: 2
+  address: RAW='0x0000000000000000000000000000000000000000'
+  is_native: true
+  decimals: 18
+  icon_url:
+

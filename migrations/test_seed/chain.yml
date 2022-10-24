@@ -1,0 +1,24 @@
+- id: 1
+  name: Ethereum
+  symbol: ETH
+  chain_id: 1
+  is_evm: true
+  scan_url:
+  scan_api_url:
+  scan_api_key:
+- id: 2
+  name: Fantom Opera
+  symbol: FTM
+  chain_id: 250
+  is_evm: true
+  scan_url:
+  scan_api_url:
+  scan_api_key:
+- id: 3
+  name: Optimism
+  symbol: OP
+  chain_id: 10
+  is_evm: true
+  scan_url:
+  scan_api_url:
+  scan_api_key:

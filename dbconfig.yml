@@ -1,0 +1,17 @@
+local:
+  dialect: postgres
+  datasource: host=localhost port=15432 user=postgres password=postgres dbname=indexer_local sslmode=disable
+  dir: migrations/schemas
+  table: migrations
+
+test:
+  dialect: postgres
+  datasource: host=localhost port=25432 user=postgres password=postgres dbname=indexer_local_test sslmode=disable
+  dir: migrations/schemas
+  table: migrations
+
+development:
+  dialect: postgres
+  datasource: host=${DB_HOST} port=${DB_PORT} user=${DB_USER} password=${DB_PASS} dbname=${DB_NAME} sslmode=${DB_SSL_MODE}
+  dir: migrations/schemas
+  table: migrations
