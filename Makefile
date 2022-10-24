@@ -60,6 +60,8 @@ gen-swagger:
 
 gen-mock:
 	@mockgen -source=./pkg/entity/contract/interface.go -destination=./pkg/entity/contract/mocks/interface.go
+	@mockgen -source=./pkg/entity/nft_entity/interface.go -destination=./pkg/entity/nft_entity/mocks/interface.go
+	@mockgen -source=./pkg/entity/chain_entity/interface.go -destination=./pkg/entity/chain_entity/mocks/interface.go
 	@mockgen -source=./pkg/entity/nft_sale_entity/interface.go -destination=./pkg/entity/nft_sale_entity/mocks/interface.go
 
 setup-githook:

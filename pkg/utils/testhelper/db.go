@@ -51,11 +51,6 @@ func LoadTestDB() *gorm.DB {
 			return
 		}
 
-		if err = fixtures.Load(); err != nil {
-			l.Fatalf(err, "failed to load fixture")
-			return
-		}
-
 		db, err = gorm.Open(postgres.New(
 			postgres.Config{Conn: conn}),
 			&gorm.Config{
@@ -65,19 +60,6 @@ func LoadTestDB() *gorm.DB {
 			})
 		if err != nil {
 			l.Fatalf(err, "gorm: failed to open database connection")
-		}
-		// refresh view
-		if err = db.Exec("REFRESH MATERIALIZED VIEW CONCURRENTLY view_nft_collections").Error; err != nil {
-			l.Fatalf(err, "gorm: refresh materialized view 'view_nft_collections' error")
-		}
-		if err = db.Exec("REFRESH MATERIALIZED VIEW CONCURRENTLY view_nft_collection_stats").Error; err != nil {
-			l.Fatalf(err, "gorm: refresh materialized view 'view_nft_collection_stats' error")
-		}
-		// if err = db.Exec("REFRESH MATERIALIZED VIEW CONCURRENTLY view_nft_tokens").Error; err != nil {
-		// 	l.Fatalf(err, "gorm: refresh materialized view 'view_nft_tokens' error")
-		// }
-		if err = db.Exec("REFRESH MATERIALIZED VIEW CONCURRENTLY view_nft_collections_attributes").Error; err != nil {
-			l.Fatalf(err, "gorm: refresh materialized view 'view_nft_collections_attributes' error")
 		}
 	})
 
