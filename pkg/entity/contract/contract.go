@@ -45,8 +45,8 @@ func (e *contractEntity) AddContract(contract model.Contract) error {
 		}
 
 		// for case evm, check if creation block is synced
-		// chainId = 2 means Aptos, no need
-		if contract.ChainId != 2 {
+		// chainId = 99999999 means Aptos, no need
+		if contract.ChainId != 99999999 {
 			// fetch current synced block from clickhouse
 			blockStats, err = e.service.ChainData.GetBlockStatsByChainId(contract.ChainId)
 			if err != nil {
