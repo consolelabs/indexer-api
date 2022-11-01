@@ -36,21 +36,6 @@ func (m *MockINftEntity) EXPECT() *MockINftEntityMockRecorder {
 	return m.recorder
 }
 
-// GetCollectionByAddress mocks base method.
-func (m *MockINftEntity) GetCollectionByAddress(collectionAddress string) (*model.NftCollection, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCollectionByAddress", collectionAddress)
-	ret0, _ := ret[0].(*model.NftCollection)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCollectionByAddress indicates an expected call of GetCollectionByAddress.
-func (mr *MockINftEntityMockRecorder) GetCollectionByAddress(collectionAddress interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByAddress", reflect.TypeOf((*MockINftEntity)(nil).GetCollectionByAddress), collectionAddress)
-}
-
 // GetCollectionMetadata mocks base method.
 func (m *MockINftEntity) GetCollectionMetadata(collectionAddress string) (*model.NftCollection, error) {
 	m.ctrl.T.Helper()
@@ -64,126 +49,6 @@ func (m *MockINftEntity) GetCollectionMetadata(collectionAddress string) (*model
 func (mr *MockINftEntityMockRecorder) GetCollectionMetadata(collectionAddress interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionMetadata", reflect.TypeOf((*MockINftEntity)(nil).GetCollectionMetadata), collectionAddress)
-}
-
-// GetCollectionSaleVolumeAndFloorPrice mocks base method.
-func (m *MockINftEntity) GetCollectionSaleVolumeAndFloorPrice(collectionAddress, timeDuration string) ([]*model.NftCollectionSaleVolumeAndFloorPrice, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCollectionSaleVolumeAndFloorPrice", collectionAddress, timeDuration)
-	ret0, _ := ret[0].([]*model.NftCollectionSaleVolumeAndFloorPrice)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCollectionSaleVolumeAndFloorPrice indicates an expected call of GetCollectionSaleVolumeAndFloorPrice.
-func (mr *MockINftEntityMockRecorder) GetCollectionSaleVolumeAndFloorPrice(collectionAddress, timeDuration interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionSaleVolumeAndFloorPrice", reflect.TypeOf((*MockINftEntity)(nil).GetCollectionSaleVolumeAndFloorPrice), collectionAddress, timeDuration)
-}
-
-// GetListingAcrossPriceRanges mocks base method.
-func (m *MockINftEntity) GetListingAcrossPriceRanges(collectionAddress, paymentToken, priceRange string) ([]*model.NftListingPriceRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListingAcrossPriceRanges", collectionAddress, paymentToken, priceRange)
-	ret0, _ := ret[0].([]*model.NftListingPriceRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetListingAcrossPriceRanges indicates an expected call of GetListingAcrossPriceRanges.
-func (mr *MockINftEntityMockRecorder) GetListingAcrossPriceRanges(collectionAddress, paymentToken, priceRange interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListingAcrossPriceRanges", reflect.TypeOf((*MockINftEntity)(nil).GetListingAcrossPriceRanges), collectionAddress, paymentToken, priceRange)
-}
-
-// GetListingAcrossRarityRankRanges mocks base method.
-func (m *MockINftEntity) GetListingAcrossRarityRankRanges(collectionAddress, paymentToken, rarityRankRange string) ([]*model.NftListingRarityRankRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListingAcrossRarityRankRanges", collectionAddress, paymentToken, rarityRankRange)
-	ret0, _ := ret[0].([]*model.NftListingRarityRankRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetListingAcrossRarityRankRanges indicates an expected call of GetListingAcrossRarityRankRanges.
-func (mr *MockINftEntityMockRecorder) GetListingAcrossRarityRankRanges(collectionAddress, paymentToken, rarityRankRange interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListingAcrossRarityRankRanges", reflect.TypeOf((*MockINftEntity)(nil).GetListingAcrossRarityRankRanges), collectionAddress, paymentToken, rarityRankRange)
-}
-
-// GetListingMarketCapAndVolumeByTimeRanges mocks base method.
-func (m *MockINftEntity) GetListingMarketCapAndVolumeByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftListingMarketCapAndVolumeTimeRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListingMarketCapAndVolumeByTimeRanges", collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftListingMarketCapAndVolumeTimeRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetListingMarketCapAndVolumeByTimeRanges indicates an expected call of GetListingMarketCapAndVolumeByTimeRanges.
-func (mr *MockINftEntityMockRecorder) GetListingMarketCapAndVolumeByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListingMarketCapAndVolumeByTimeRanges", reflect.TypeOf((*MockINftEntity)(nil).GetListingMarketCapAndVolumeByTimeRanges), collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-}
-
-// GetListingTotalVolumeByTimeRanges mocks base method.
-func (m *MockINftEntity) GetListingTotalVolumeByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftListingTotalVolumeTimeRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListingTotalVolumeByTimeRanges", collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftListingTotalVolumeTimeRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetListingTotalVolumeByTimeRanges indicates an expected call of GetListingTotalVolumeByTimeRanges.
-func (mr *MockINftEntityMockRecorder) GetListingTotalVolumeByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListingTotalVolumeByTimeRanges", reflect.TypeOf((*MockINftEntity)(nil).GetListingTotalVolumeByTimeRanges), collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-}
-
-// GetListingUniqueOwnersByTimeRange mocks base method.
-func (m *MockINftEntity) GetListingUniqueOwnersByTimeRange(collectionAddress, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftListingUniqueOwnersTimeRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetListingUniqueOwnersByTimeRange", collectionAddress, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftListingUniqueOwnersTimeRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetListingUniqueOwnersByTimeRange indicates an expected call of GetListingUniqueOwnersByTimeRange.
-func (mr *MockINftEntityMockRecorder) GetListingUniqueOwnersByTimeRange(collectionAddress, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetListingUniqueOwnersByTimeRange", reflect.TypeOf((*MockINftEntity)(nil).GetListingUniqueOwnersByTimeRange), collectionAddress, timeDuration, timeInterval, timeRoundUp)
-}
-
-// GetMarketSnapshotFloorPriceByTimeRanges mocks base method.
-func (m *MockINftEntity) GetMarketSnapshotFloorPriceByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftMarketplaceCollectionSnapshotFloorPriceTimeRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMarketSnapshotFloorPriceByTimeRanges", collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftMarketplaceCollectionSnapshotFloorPriceTimeRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetMarketSnapshotFloorPriceByTimeRanges indicates an expected call of GetMarketSnapshotFloorPriceByTimeRanges.
-func (mr *MockINftEntityMockRecorder) GetMarketSnapshotFloorPriceByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMarketSnapshotFloorPriceByTimeRanges", reflect.TypeOf((*MockINftEntity)(nil).GetMarketSnapshotFloorPriceByTimeRanges), collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-}
-
-// GetMarketSnapshotMarketCapByTimeRanges mocks base method.
-func (m *MockINftEntity) GetMarketSnapshotMarketCapByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftMarketplaceCollectionSnapshotMarketCapTimeRange, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetMarketSnapshotMarketCapByTimeRanges", collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftMarketplaceCollectionSnapshotMarketCapTimeRange)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetMarketSnapshotMarketCapByTimeRanges indicates an expected call of GetMarketSnapshotMarketCapByTimeRanges.
-func (mr *MockINftEntityMockRecorder) GetMarketSnapshotMarketCapByTimeRanges(collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetMarketSnapshotMarketCapByTimeRanges", reflect.TypeOf((*MockINftEntity)(nil).GetMarketSnapshotMarketCapByTimeRanges), collectionAddress, paymentToken, timeDuration, timeInterval, timeRoundUp)
 }
 
 // GetNftCollectionTickers mocks base method.
@@ -215,52 +80,6 @@ func (m *MockINftEntity) GetNftCollections(query request.GetNftCollectionsReques
 func (mr *MockINftEntityMockRecorder) GetNftCollections(query interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftCollections", reflect.TypeOf((*MockINftEntity)(nil).GetNftCollections), query)
-}
-
-// GetNftCollectionsByWalletAddress mocks base method.
-func (m *MockINftEntity) GetNftCollectionsByWalletAddress(walletAddress string, query request.GetNftCollectionsByWalletAddressRequest) ([]model.NftCollection, int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNftCollectionsByWalletAddress", walletAddress, query)
-	ret0, _ := ret[0].([]model.NftCollection)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetNftCollectionsByWalletAddress indicates an expected call of GetNftCollectionsByWalletAddress.
-func (mr *MockINftEntityMockRecorder) GetNftCollectionsByWalletAddress(walletAddress, query interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftCollectionsByWalletAddress", reflect.TypeOf((*MockINftEntity)(nil).GetNftCollectionsByWalletAddress), walletAddress, query)
-}
-
-// GetNftListingAvgPricesAndFloor mocks base method.
-func (m *MockINftEntity) GetNftListingAvgPricesAndFloor(collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftListingAvgPriceAndFloor, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNftListingAvgPricesAndFloor", collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftListingAvgPriceAndFloor)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetNftListingAvgPricesAndFloor indicates an expected call of GetNftListingAvgPricesAndFloor.
-func (mr *MockINftEntityMockRecorder) GetNftListingAvgPricesAndFloor(collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftListingAvgPricesAndFloor", reflect.TypeOf((*MockINftEntity)(nil).GetNftListingAvgPricesAndFloor), collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp)
-}
-
-// GetNftListingSoldPrices mocks base method.
-func (m *MockINftEntity) GetNftListingSoldPrices(collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp string) ([]*model.NftListingSoldPrice, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNftListingSoldPrices", collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp)
-	ret0, _ := ret[0].([]*model.NftListingSoldPrice)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetNftListingSoldPrices indicates an expected call of GetNftListingSoldPrices.
-func (mr *MockINftEntityMockRecorder) GetNftListingSoldPrices(collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftListingSoldPrices", reflect.TypeOf((*MockINftEntity)(nil).GetNftListingSoldPrices), collectionAddress, tokenId, paymentToken, timeDuration, timeInterval, timeRoundUp)
 }
 
 // GetNftMetadataAttributesIcon mocks base method.
@@ -324,22 +143,6 @@ func (mr *MockINftEntityMockRecorder) GetNftTokens(address, query interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTokens", reflect.TypeOf((*MockINftEntity)(nil).GetNftTokens), address, query)
 }
 
-// GetNftTokensByWalletAddress mocks base method.
-func (m *MockINftEntity) GetNftTokensByWalletAddress(walletAddress string, query request.GetNftTokensByAddressRequest) ([]model.NftToken, int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNftTokensByWalletAddress", walletAddress, query)
-	ret0, _ := ret[0].([]model.NftToken)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetNftTokensByWalletAddress indicates an expected call of GetNftTokensByWalletAddress.
-func (mr *MockINftEntityMockRecorder) GetNftTokensByWalletAddress(walletAddress, query interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTokensByWalletAddress", reflect.TypeOf((*MockINftEntity)(nil).GetNftTokensByWalletAddress), walletAddress, query)
-}
-
 // GetNftTradingVolume mocks base method.
 func (m *MockINftEntity) GetNftTradingVolume() ([]response.NftTradingVolume, error) {
 	m.ctrl.T.Helper()
@@ -353,23 +156,6 @@ func (m *MockINftEntity) GetNftTradingVolume() ([]response.NftTradingVolume, err
 func (mr *MockINftEntityMockRecorder) GetNftTradingVolume() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTradingVolume", reflect.TypeOf((*MockINftEntity)(nil).GetNftTradingVolume))
-}
-
-// GetQueryOptions mocks base method.
-func (m *MockINftEntity) GetQueryOptions(collectionAddress string) ([]model.MarketplaceWithListingStats, map[string][]model.NftTokenAttribute, []model.NftTokenAttributeCount, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetQueryOptions", collectionAddress)
-	ret0, _ := ret[0].([]model.MarketplaceWithListingStats)
-	ret1, _ := ret[1].(map[string][]model.NftTokenAttribute)
-	ret2, _ := ret[2].([]model.NftTokenAttributeCount)
-	ret3, _ := ret[3].(error)
-	return ret0, ret1, ret2, ret3
-}
-
-// GetQueryOptions indicates an expected call of GetQueryOptions.
-func (mr *MockINftEntityMockRecorder) GetQueryOptions(collectionAddress interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetQueryOptions", reflect.TypeOf((*MockINftEntity)(nil).GetQueryOptions), collectionAddress)
 }
 
 // GetTokenActivities mocks base method.
@@ -388,22 +174,6 @@ func (mr *MockINftEntityMockRecorder) GetTokenActivities(collectionAddress, toke
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenActivities", reflect.TypeOf((*MockINftEntity)(nil).GetTokenActivities), collectionAddress, tokenId, req)
 }
 
-// GetTokenBidHistory mocks base method.
-func (m *MockINftEntity) GetTokenBidHistory(collectionAddress, tokenId string, req *model.Pagination) ([]*model.NftBid, int64, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTokenBidHistory", collectionAddress, tokenId, req)
-	ret0, _ := ret[0].([]*model.NftBid)
-	ret1, _ := ret[1].(int64)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetTokenBidHistory indicates an expected call of GetTokenBidHistory.
-func (mr *MockINftEntityMockRecorder) GetTokenBidHistory(collectionAddress, tokenId, req interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenBidHistory", reflect.TypeOf((*MockINftEntity)(nil).GetTokenBidHistory), collectionAddress, tokenId, req)
-}
-
 // GetTokenDetail mocks base method.
 func (m *MockINftEntity) GetTokenDetail(address, tokenId string) (*model.NftToken, error) {
 	m.ctrl.T.Helper()
@@ -417,77 +187,4 @@ func (m *MockINftEntity) GetTokenDetail(address, tokenId string) (*model.NftToke
 func (mr *MockINftEntityMockRecorder) GetTokenDetail(address, tokenId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenDetail", reflect.TypeOf((*MockINftEntity)(nil).GetTokenDetail), address, tokenId)
-}
-
-// GetTokenMetadata mocks base method.
-func (m *MockINftEntity) GetTokenMetadata(collectionAddress, tokenId string) (*response.GetNftTokenMetadataResponse, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetTokenMetadata", collectionAddress, tokenId)
-	ret0, _ := ret[0].(*response.GetNftTokenMetadataResponse)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetTokenMetadata indicates an expected call of GetTokenMetadata.
-func (mr *MockINftEntityMockRecorder) GetTokenMetadata(collectionAddress, tokenId interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenMetadata", reflect.TypeOf((*MockINftEntity)(nil).GetTokenMetadata), collectionAddress, tokenId)
-}
-
-// ResyncNftCollection mocks base method.
-func (m *MockINftEntity) ResyncNftCollection(collectionAddress string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResyncNftCollection", collectionAddress)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ResyncNftCollection indicates an expected call of ResyncNftCollection.
-func (mr *MockINftEntityMockRecorder) ResyncNftCollection(collectionAddress interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResyncNftCollection", reflect.TypeOf((*MockINftEntity)(nil).ResyncNftCollection), collectionAddress)
-}
-
-// ResyncNftCollectionMetadata mocks base method.
-func (m *MockINftEntity) ResyncNftCollectionMetadata(collectionAddress string, chainId int64) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResyncNftCollectionMetadata", collectionAddress, chainId)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ResyncNftCollectionMetadata indicates an expected call of ResyncNftCollectionMetadata.
-func (mr *MockINftEntityMockRecorder) ResyncNftCollectionMetadata(collectionAddress, chainId interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResyncNftCollectionMetadata", reflect.TypeOf((*MockINftEntity)(nil).ResyncNftCollectionMetadata), collectionAddress, chainId)
-}
-
-// ResyncNftCollectionRarity mocks base method.
-func (m *MockINftEntity) ResyncNftCollectionRarity(collectionAddress string) error {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "ResyncNftCollectionRarity", collectionAddress)
-	ret0, _ := ret[0].(error)
-	return ret0
-}
-
-// ResyncNftCollectionRarity indicates an expected call of ResyncNftCollectionRarity.
-func (mr *MockINftEntityMockRecorder) ResyncNftCollectionRarity(collectionAddress interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ResyncNftCollectionRarity", reflect.TypeOf((*MockINftEntity)(nil).ResyncNftCollectionRarity), collectionAddress)
-}
-
-// SearchNft mocks base method.
-func (m *MockINftEntity) SearchNft(arg0 *request.SearchNftRequest) ([]model.NftCollection, []model.NftToken, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "SearchNft", arg0)
-	ret0, _ := ret[0].([]model.NftCollection)
-	ret1, _ := ret[1].([]model.NftToken)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// SearchNft indicates an expected call of SearchNft.
-func (mr *MockINftEntityMockRecorder) SearchNft(arg0 interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SearchNft", reflect.TypeOf((*MockINftEntity)(nil).SearchNft), arg0)
 }
