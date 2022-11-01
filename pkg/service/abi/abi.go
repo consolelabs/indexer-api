@@ -43,29 +43,6 @@ func (e *abiEntity) CheckERC721(address string, chainId int64) (bool, error) {
 	return isERC721, nil
 }
 
-func (e *abiEntity) GetNameAndSymbol(address string, chainId int64) (name string, symbol string, err error) {
-	rpcUrl := e.selectRpcUrl(chainId)
-	client, err := ethclient.Dial(rpcUrl)
-	if err != nil {
-		return "", "", err
-	}
-
-	addressHash := common.HexToAddress(address)
-	instance, err := abi.NewERC721(addressHash, client)
-	if err != nil {
-		return "", "", err
-	}
-	name, err = instance.Name(&bind.CallOpts{})
-	if err != nil {
-		return "", "", err
-	}
-	symbol, err = instance.Symbol(&bind.CallOpts{})
-	if err != nil {
-		return "", "", err
-	}
-	return name, symbol, nil
-}
-
 func (e *abiEntity) selectRpcUrl(chainId int64) string {
 	switch chainId {
 	case 1:

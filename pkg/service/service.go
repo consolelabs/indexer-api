@@ -13,18 +13,12 @@ import (
 	chaindata "github.com/consolelabs/indexer-api/pkg/service/chain_data"
 	chainexplorer "github.com/consolelabs/indexer-api/pkg/service/chain_explorer"
 	"github.com/consolelabs/indexer-api/pkg/service/gcs"
-	opensea "github.com/consolelabs/indexer-api/pkg/service/marketplace/opensea"
-	paintswap "github.com/consolelabs/indexer-api/pkg/service/marketplace/paintswap"
-	quixotic "github.com/consolelabs/indexer-api/pkg/service/marketplace/quixotic"
 )
 
 type Service struct {
 	ChainData     chaindata.IService
 	ChainExplorer chainexplorer.IService
 	Abi           abi.IService
-	Opensea       opensea.IService
-	Paintswap     paintswap.IService
-	Quixotic      quixotic.IService
 	Gcs           gcs.IService
 }
 
@@ -34,9 +28,6 @@ func New(cfg *config.Config) *Service {
 		ChainData:     chaindata.New(db),
 		ChainExplorer: chainexplorer.New(cfg),
 		Abi:           abi.New(cfg),
-		Opensea:       opensea.New(cfg),
-		Paintswap:     paintswap.New(cfg),
-		Quixotic:      quixotic.New(cfg),
 		Gcs:           gcs.New(cfg),
 	}
 }
