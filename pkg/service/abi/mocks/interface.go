@@ -47,19 +47,3 @@ func (mr *MockIServiceMockRecorder) CheckERC721(address, chainId interface{}) *g
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CheckERC721", reflect.TypeOf((*MockIService)(nil).CheckERC721), address, chainId)
 }
-
-// GetNameAndSymbol mocks base method.
-func (m *MockIService) GetNameAndSymbol(address string, chainId int64) (string, string, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetNameAndSymbol", address, chainId)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
-}
-
-// GetNameAndSymbol indicates an expected call of GetNameAndSymbol.
-func (mr *MockIServiceMockRecorder) GetNameAndSymbol(address, chainId interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNameAndSymbol", reflect.TypeOf((*MockIService)(nil).GetNameAndSymbol), address, chainId)
-}
