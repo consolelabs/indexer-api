@@ -26,9 +26,9 @@ func (s *store) GetTokensByCollectionAddress(collectionAddress string) ([]model.
 	return tokens, s.db.Table("nft_token").Where("collection_address = ?", collectionAddress).Find(&tokens).Error
 }
 
-func (s *store) UpdateCollection(collection *model.NftCollection) error {
-	return s.db.Table("nft_collection").Where("address = ?", collection.Address).Save(&collection).Error
-}
+// func (s *store) UpdateCollection(collection *model.NftCollection) error {
+// 	return s.db.Table("nft_collection").Where("address = ?", collection.Address).Save(&collection).Error
+// }
 
 func (s *store) GetNftTokens(collectionAddress string, tokenId string) (model.NftToken, error) {
 	var token model.NftToken
