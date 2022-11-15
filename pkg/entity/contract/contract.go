@@ -44,15 +44,19 @@ func (e *contractEntity) AddContract(contract model.Contract) error {
 			return err
 		}
 
-		// fetch current synced block from clickhouse
-		blockStats, err = e.service.ChainData.GetBlockStatsByChainId(contract.ChainId)
-		if err != nil {
-			return err
-		}
+		// for case evm, check if creation block is synced
+		// chainId = 99999999 means Aptos, no need
+		if contract.ChainId != 99999999 {
+			// fetch current synced block from clickhouse
+			blockStats, err = e.service.ChainData.GetBlockStatsByChainId(contract.ChainId)
+			if err != nil {
+				return err
+			}
 
-		// check if we already synced all block in clickhouse
-		if !isCreationBlockSynced(creationBlockNumber, blockStats, contract.ChainId) {
-			return errors.New("block number not synced yet, TODO: add to queue and try later")
+			// check if we already synced all block in clickhouse
+			if !isCreationBlockSynced(creationBlockNumber, blockStats, contract.ChainId) {
+				return errors.New("block number not synced yet, TODO: add to queue and try later")
+			}
 		}
 
 		// enrich data

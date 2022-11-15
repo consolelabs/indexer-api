@@ -59,12 +59,18 @@ func (e *chainExplorerEntity) GetCreationBlockNumber(contract model.Contract) (i
 	}
 
 	type response struct {
-		Result []model.ChainExplorerTransaction `json:"result"`
+		Result  []model.ChainExplorerTransaction `json:"result"`
+		Status  string                           `json:"status"`
+		Message string                           `json:"message"`
 	}
 
 	var r response
 	err = json.Unmarshal(body, &r)
 	if err != nil {
+		return 0, err
+	}
+
+	if r.Status == "0" && r.Message == "No transactions found" {
 		return 0, err
 	}
 
@@ -97,6 +103,10 @@ func (e *chainExplorerEntity) selectChain(chainId int64) model.Chain {
 		return model.Chain{
 			ScanApiUrl: "https://api-optimistic.etherscan.io/api",
 			ScanApiKey: e.config.ChainExplorerApiKey.Optimism,
+		}
+	case constant.C.ChainId.Apt:
+		return model.Chain{
+			ScanApiUrl: "https://api.aptoscan.com/api",
 		}
 	default:
 		return model.Chain{

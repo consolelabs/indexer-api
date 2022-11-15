@@ -27,9 +27,9 @@ func (s *store) Save(new *model.Contract) error {
 	return s.db.Save(new).Error
 }
 
-func (s *store) Update(new *model.Contract) error {
-	return s.db.Save(new).Error
-}
+// func (s *store) Update(new *model.Contract) error {
+// 	return s.db.Save(new).Error
+// }
 
 func (s *store) GetByAddress(address string) (*model.Contract, error) {
 	var contract model.Contract
