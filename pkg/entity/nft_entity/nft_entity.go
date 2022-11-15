@@ -331,7 +331,7 @@ func (e *entity) GetTokenActivities(collectionAddress, tokenId string, req reque
 	for i, listing := range listings {
 		switch listing.ListingStatus {
 		case model.ListingStatusSold:
-			listings[i].EventType = "sale"
+			listings[i].EventType = "sold"
 		case model.ListingStatusCancelled:
 			listings[i].EventType = "cancelled"
 		case model.ListingStatusListed:
