@@ -64,21 +64,6 @@ func (mr *MockINftMockRecorder) GetAttributesByCollectionAddress(collectionAddre
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAttributesByCollectionAddress", reflect.TypeOf((*MockINft)(nil).GetAttributesByCollectionAddress), collectionAddress)
 }
 
-// GetCollectionByAddress mocks base method.
-func (m *MockINft) GetCollectionByAddress(address string) (*model.NftCollection, error) {
-	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetCollectionByAddress", address)
-	ret0, _ := ret[0].(*model.NftCollection)
-	ret1, _ := ret[1].(error)
-	return ret0, ret1
-}
-
-// GetCollectionByAddress indicates an expected call of GetCollectionByAddress.
-func (mr *MockINftMockRecorder) GetCollectionByAddress(address interface{}) *gomock.Call {
-	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionByAddress", reflect.TypeOf((*MockINft)(nil).GetCollectionByAddress), address)
-}
-
 // GetCollections mocks base method.
 func (m *MockINft) GetCollections(query nft.NftCollectionQuery) ([]model.NftCollection, int64, error) {
 	m.ctrl.T.Helper()
@@ -109,6 +94,21 @@ func (m *MockINft) GetCollectionsByWalletAddress(query nft.WalletCollectionQuery
 func (mr *MockINftMockRecorder) GetCollectionsByWalletAddress(query interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCollectionsByWalletAddress", reflect.TypeOf((*MockINft)(nil).GetCollectionsByWalletAddress), query)
+}
+
+// GetNftCollectionStats mocks base method.
+func (m *MockINft) GetNftCollectionStats(collectionAddress string) ([]model.ViewNftCollectionStats, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNftCollectionStats", collectionAddress)
+	ret0, _ := ret[0].([]model.ViewNftCollectionStats)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNftCollectionStats indicates an expected call of GetNftCollectionStats.
+func (mr *MockINftMockRecorder) GetNftCollectionStats(collectionAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftCollectionStats", reflect.TypeOf((*MockINft)(nil).GetNftCollectionStats), collectionAddress)
 }
 
 // GetNftListing mocks base method.

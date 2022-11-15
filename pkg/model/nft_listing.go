@@ -34,7 +34,7 @@ type NftListing struct {
 	CreatedTime     time.Time            `json:"created_time"`
 	LastUpdatedTime time.Time            `json:"last_updated_time"`
 	SoldPrice       string               `json:"sold_price"`
-	ListingPrice    string               `json:"listing_price"`
+	ListingPrice    *string              `json:"listing_price"`
 	SoldPriceObj    *Price               `json:"sold_price_obj" gorm:"-"`
 	ListingPriceObj *Price               `json:"listing_price_obj" gorm:"-"`
 	EventType       string               `json:"event_type" gorm:"-"`
