@@ -17,4 +17,5 @@ type INftEntity interface {
 	GetCollectionMetadata(collectionAddress string) (*model.NftCollection, error)
 	GetTokenActivities(collectionAddress, tokenId string, req request.GetNftTokenActivitiesRequest) (activities []*model.NftListing, total int64, err error)
 	GetNftTokenTransactionHistory(collectionAddress, tokenId string) ([]model.NftTxHistory, error)
+	GetNftTokensByWalletAddress(walletAddress string, query request.GetNftTokensByAddressRequest) (tokens []model.NftToken, total int64, err error)
 }

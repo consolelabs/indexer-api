@@ -581,3 +581,26 @@ func (e *entity) CalculateNftCollectionFloorPrice(collectionAddress string) (pri
 	}
 	return price
 }
+
+func (e *entity) GetNftTokensByWalletAddress(walletAddress string, req request.GetNftTokensByAddressRequest) ([]model.NftToken, int64, error) {
+	req.Standardize()
+	query := nft.WalletTokenQuery{
+		WalletAddress:       walletAddress,
+		CollectionAddresses: req.CollectionAddresses,
+		ChainId:             req.ChainId,
+		Offset:              int(req.Page * req.Size),
+		Limit:               int(req.Size),
+	}
+	tokens, total, err := e.store.Nft.GetTokensByWalletAddress(query)
+	if err != nil {
+		logger.L.Fields(logger.Fields{
+			"query": query,
+		}).Error(err, "[Entity][GetNftTokensByWalletAddress] store.GetTokensByWalletAddress failed")
+	}
+	// tokensAtributes
+	for i, token := range tokens {
+		att, _ := e.store.Nft.GetAttributeByCollectionAddressTokenID(token.CollectionAddress, token.TokenId)
+		tokens[i].Attributes = att
+	}
+	return tokens, total, err
+}

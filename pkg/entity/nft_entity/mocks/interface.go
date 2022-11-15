@@ -143,6 +143,22 @@ func (mr *MockINftEntityMockRecorder) GetNftTokens(address, query interface{}) *
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTokens", reflect.TypeOf((*MockINftEntity)(nil).GetNftTokens), address, query)
 }
 
+// GetNftTokensByWalletAddress mocks base method.
+func (m *MockINftEntity) GetNftTokensByWalletAddress(walletAddress string, query request.GetNftTokensByAddressRequest) ([]model.NftToken, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNftTokensByWalletAddress", walletAddress, query)
+	ret0, _ := ret[0].([]model.NftToken)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetNftTokensByWalletAddress indicates an expected call of GetNftTokensByWalletAddress.
+func (mr *MockINftEntityMockRecorder) GetNftTokensByWalletAddress(walletAddress, query interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTokensByWalletAddress", reflect.TypeOf((*MockINftEntity)(nil).GetNftTokensByWalletAddress), walletAddress, query)
+}
+
 // GetNftTradingVolume mocks base method.
 func (m *MockINftEntity) GetNftTradingVolume() ([]response.NftTradingVolume, error) {
 	m.ctrl.T.Helper()

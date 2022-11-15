@@ -66,6 +66,10 @@ func Test_loadV1Routes(t *testing.T) {
 			Method:  "GET",
 			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetNftTokenTransactionHistory-fm",
 		},
+		"/api/v1/:wallet_address/nft": {
+			Method:  "GET",
+			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetNftTokensByWalletAddress-fm",
+		},
 	}
 	h, err := handler.New(nil, nil, nil)
 	require.NoError(t, err)

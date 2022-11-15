@@ -49,6 +49,21 @@ func (mr *MockINftMockRecorder) DeleteOwnerByCollectionAddressTokenId(collection
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOwnerByCollectionAddressTokenId", reflect.TypeOf((*MockINft)(nil).DeleteOwnerByCollectionAddressTokenId), collectionAddress, tokenId)
 }
 
+// GetAttributeByCollectionAddressTokenID mocks base method.
+func (m *MockINft) GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAttributeByCollectionAddressTokenID", collectionAddress, tokenID)
+	ret0, _ := ret[0].([]model.NftTokenAttribute)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAttributeByCollectionAddressTokenID indicates an expected call of GetAttributeByCollectionAddressTokenID.
+func (mr *MockINftMockRecorder) GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAttributeByCollectionAddressTokenID", reflect.TypeOf((*MockINft)(nil).GetAttributeByCollectionAddressTokenID), collectionAddress, tokenID)
+}
+
 // GetAttributesByCollectionAddress mocks base method.
 func (m *MockINft) GetAttributesByCollectionAddress(collectionAddress string) ([]model.NftTokenAttribute, error) {
 	m.ctrl.T.Helper()
@@ -232,6 +247,22 @@ func (m *MockINft) GetPlatformsByCollectionAddress(collectionAddress string) ([]
 func (mr *MockINftMockRecorder) GetPlatformsByCollectionAddress(collectionAddress interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPlatformsByCollectionAddress", reflect.TypeOf((*MockINft)(nil).GetPlatformsByCollectionAddress), collectionAddress)
+}
+
+// GetTokensByWalletAddress mocks base method.
+func (m *MockINft) GetTokensByWalletAddress(query nft.WalletTokenQuery) ([]model.NftToken, int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetTokensByWalletAddress", query)
+	ret0, _ := ret[0].([]model.NftToken)
+	ret1, _ := ret[1].(int64)
+	ret2, _ := ret[2].(error)
+	return ret0, ret1, ret2
+}
+
+// GetTokensByWalletAddress indicates an expected call of GetTokensByWalletAddress.
+func (mr *MockINftMockRecorder) GetTokensByWalletAddress(query interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokensByWalletAddress", reflect.TypeOf((*MockINft)(nil).GetTokensByWalletAddress), query)
 }
 
 // RefreshViewNFTCollectionAttributes mocks base method.
