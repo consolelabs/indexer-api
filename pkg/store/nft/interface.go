@@ -5,6 +5,7 @@ import "github.com/consolelabs/indexer-api/pkg/model"
 type INft interface {
 	// Token
 	GetNftTokens(query NftTokenQuery) (tokens []model.NftToken, total int64, err error)
+	GetTokensByWalletAddress(query WalletTokenQuery) (data []model.NftToken, total int64, err error)
 
 	// ViewNftTokens
 	RefreshViewNFTTokens() error
@@ -32,6 +33,7 @@ type INft interface {
 	// Attribute
 	GetAttributesByCollectionAddress(collectionAddress string) ([]model.NftTokenAttribute, error)
 	UpdateAttributeCount(count uint64, address, traitType, value string) error
+	GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error)
 
 	// Marketplace Platform
 	GetPlatformsByCollectionAddress(collectionAddress string) ([]model.MarketplacePlatform, error)
