@@ -626,6 +626,7 @@ func Test_GetTokenActivities(t *testing.T) {
 	tokenId := "1821"
 	invalidAddress := "asd"
 	validAddress := "0x7aCeE5D0acC520faB33b3Ea25D4FEEF1FfebDE73"
+	value := "34000000000000000000"
 	listings := []*model.NftListing{
 		{
 			TokenId:         tokenId,
@@ -643,7 +644,7 @@ func Test_GetTokenActivities(t *testing.T) {
 				URL:  "https://paintswap.finance/",
 			},
 			SoldPrice:    "15000000000000000000",
-			ListingPrice: "34000000000000000000",
+			ListingPrice: &value,
 			SoldPriceObj: &model.Price{
 				Token:  token,
 				Amount: "15000000000000000000",

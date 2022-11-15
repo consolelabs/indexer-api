@@ -50,6 +50,7 @@ type INft interface {
 
 	// ViewNftCollectionStats
 	RefreshViewNFTCollectionStats() error
+	GetNftCollectionStats(collectionAddress string) ([]model.ViewNftCollectionStats, error)
 
 	// ViewNftCollectionAttributes
 	RefreshViewNFTCollectionAttributes() error

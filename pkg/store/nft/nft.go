@@ -586,11 +586,10 @@ func (s *store) GetNftListing(q NftListingQuery) (listings []*model.NftListing, 
 	if err != nil {
 		return nil, 0, err
 	}
-	defer rows.Close()
 	for rows.Next() {
 		listing := model.NftListing{Marketplace: &model.MarketplacePlatform{}}
 		token := model.Token{}
-		rows.Scan(
+		err := rows.Scan(
 			&listing.PlatformId,
 			&listing.TokenId,
 			&listing.ContractAddress,
@@ -618,7 +617,13 @@ func (s *store) GetNftListing(q NftListingQuery) (listings []*model.NftListing, 
 		if err != nil {
 			return nil, 0, err
 		}
-		listing.ListingPriceObj = &model.Price{Amount: listing.ListingPrice, Token: token}
+
+		listingPrice := ""
+		if listing.ListingPrice != nil {
+			listingPrice = *listing.ListingPrice
+		}
+
+		listing.ListingPriceObj = &model.Price{Amount: listingPrice, Token: token}
 		listing.SoldPriceObj = &model.Price{Amount: listing.SoldPrice, Token: token}
 		listings = append(listings, &listing)
 	}
@@ -750,8 +755,7 @@ func (s *store) GetNftMarketplaceCollection(collectionAddress string) ([]model.N
 			nft_listing
 			LEFT JOIN marketplace_platform ON nft_listing.platform_id = marketplace_platform.id
 		WHERE
-			nft_listing.contract_address = $1
-		LIMIT 1;
+			nft_listing.contract_address = $1;
 		`, collectionAddress).Rows()
 	if err != nil {
 		return nil, err
@@ -767,4 +771,211 @@ func (s *store) GetNftMarketplaceCollection(collectionAddress string) ([]model.N
 		marketplaceCollection = append(marketplaceCollection, h)
 	}
 	return marketplaceCollection, nil
+}
+
+// TODO(trkhoi): because view_nft_collection_stats not working, we need to use this function to get collection stats
+// remove asap
+func (s *store) GetNftCollectionStats(collectionAddress string) ([]model.ViewNftCollectionStats, error) {
+	rows, err := s.db.Raw(
+		`
+		WITH v1 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS one_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now())
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '1 day'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		v7 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS seven_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now())
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '7 days'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		v30 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS thirty_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now())
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '30 days'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		v AS (
+			SELECT
+				nl.contract_address,
+				sum(COALESCE(NULLIF(nl.sold_price,
+							''::text),
+						'0'::text)::numeric) AS all_time_volume,
+				max(nl.payment_token) AS payment_token
+			FROM
+				nft_listing nl
+			WHERE
+				nl.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nl.contract_address
+		),
+		prev_v1 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS prev_one_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now() - '1 day'::interval)
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '2 days'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		prev_v7 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS prev_seven_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now() - '7 days'::interval)
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '14 days'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		prev_v30 AS (
+			SELECT
+				nft_listing.contract_address,
+				sum(COALESCE(NULLIF(nft_listing.sold_price,
+							''::text),
+						'0'::text)::numeric) AS prev_thirty_day_volume
+			FROM
+				nft_listing
+			WHERE
+				date_part('epoch'::text,
+					nft_listing.created_time) <= date_part('epoch'::text,
+					now() - '30 days'::interval)
+				AND date_part('epoch'::text,
+					nft_listing.created_time) >= date_part('epoch'::text,
+					now() - '60 days'::interval)
+				AND nft_listing.listing_status = 'sold'::nft_listing_status
+			GROUP BY
+				nft_listing.contract_address
+		),
+		mcollection AS (
+			SELECT
+				max(nft_marketplace_collection_snapshot.created_time) AS created_time,
+				nft_marketplace_collection_snapshot.collection_address,
+				nft_marketplace_collection_snapshot.platform_id
+			FROM
+				nft_marketplace_collection_snapshot
+			GROUP BY
+				nft_marketplace_collection_snapshot.collection_address,
+				nft_marketplace_collection_snapshot.platform_id
+		)
+		SELECT
+			t.address,
+			t.payment_token,
+			t.floor_price,
+			t.one_day_volume,
+			COALESCE(NULLIF(t.one_day_volume_change, 0::numeric)::double precision, t.one_day_volume::double precision / pow(10::double precision, t.decimals::double precision)) AS one_day_volume_change,
+			t.seven_day_volume,
+			COALESCE(NULLIF(t.seven_day_volume_change, 0::numeric)::double precision, t.seven_day_volume::double precision / pow(10::double precision, t.decimals::double precision)) AS seven_day_volume_change,
+			t.thirty_day_volume,
+			COALESCE(NULLIF(t.thirty_day_volume_change, 0::numeric)::double precision, t.thirty_day_volume::double precision / pow(10::double precision, t.decimals::double precision)) AS thirty_day_volume_change,
+			t.all_time_volume,
+			t.all_time_volume::double precision / pow(10::double precision, t.decimals::double precision) AS all_time_volume_change
+		FROM (
+			SELECT
+				nc.address,
+				(
+					SELECT
+						min(nft_marketplace_collection_snapshot.floor_price::numeric) AS min
+					FROM
+						nft_marketplace_collection_snapshot
+					WHERE
+						nft_marketplace_collection_snapshot.created_time = mcollection.created_time
+						AND nft_marketplace_collection_snapshot.collection_address = mcollection.collection_address
+						AND nft_marketplace_collection_snapshot.platform_id = mcollection.platform_id) AS floor_price, COALESCE(v1.one_day_volume, 0::numeric) AS one_day_volume, COALESCE((v1.one_day_volume - prev_v1.prev_one_day_volume) / NULLIF(prev_v1.prev_one_day_volume, 0::numeric), 0::numeric) AS one_day_volume_change, COALESCE(v7.seven_day_volume, 0::numeric) AS seven_day_volume, COALESCE((v7.seven_day_volume - prev_v7.prev_seven_day_volume) / NULLIF(prev_v7.prev_seven_day_volume, 0::numeric), 0::numeric) AS seven_day_volume_change, COALESCE(v30.thirty_day_volume, 0::numeric) AS thirty_day_volume, COALESCE((v30.thirty_day_volume - prev_v30.prev_thirty_day_volume) / NULLIF(prev_v30.prev_thirty_day_volume, 0::numeric), 0::numeric) AS thirty_day_volume_change, COALESCE(v.all_time_volume, 0::numeric) AS all_time_volume, token.id AS payment_token, token.decimals
+				FROM
+					nft_collection nc
+				LEFT JOIN mcollection ON nc.address = mcollection.collection_address
+				LEFT JOIN v1 ON nc.address = v1.contract_address
+				LEFT JOIN prev_v1 ON nc.address = prev_v1.contract_address
+				LEFT JOIN v7 ON nc.address = v7.contract_address
+				LEFT JOIN prev_v7 ON nc.address = prev_v7.contract_address
+				LEFT JOIN v30 ON nc.address = v30.contract_address
+				LEFT JOIN prev_v30 ON nc.address = prev_v30.contract_address
+				LEFT JOIN v ON nc.address = v.contract_address
+				LEFT JOIN token ON v.payment_token = token.id) t
+		WHERE
+			t.address = $1;
+		`, collectionAddress).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var stats []model.ViewNftCollectionStats
+	for rows.Next() {
+		h := model.ViewNftCollectionStats{}
+		rows.Scan(
+			&h.Address,
+			&h.PaymentToken,
+			&h.FloorPrice,
+			&h.OneDayVolume,
+			&h.OneDayVolumeChange,
+			&h.SevenDayVolume,
+			&h.SevenDayVolumeChange,
+			&h.ThirtyDayVolume,
+			&h.ThirtyDayVolumeChange,
+			&h.AllTimeVolume,
+			&h.AllTimeVolumeChange,
+		)
+		stats = append(stats, h)
+	}
+	return stats, nil
 }
