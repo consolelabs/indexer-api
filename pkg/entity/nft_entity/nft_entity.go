@@ -516,7 +516,7 @@ func (e *entity) CalculatePriceChangePercentageToken(collectionAddress, tokenID 
 		return "", "", ""
 	}
 
-	if len(listings) > 0 {
+	if len(listings) > 2 {
 		decimals := int(listings[len(listings)-1].SoldPriceObj.Token.Decimals)
 		priceNow := utils.StringWeiToEther(listings[len(listings)-1].SoldPriceObj.Amount, decimals)
 		price1d := utils.StringWeiToEther(listings[len(listings)-2].SoldPriceObj.Amount, decimals)
