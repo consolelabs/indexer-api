@@ -2,6 +2,7 @@ package nft
 
 import (
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -978,4 +979,59 @@ func (s *store) GetNftCollectionStats(collectionAddress string) ([]model.ViewNft
 		stats = append(stats, h)
 	}
 	return stats, nil
+}
+
+func (s *store) GetTokensByWalletAddress(q WalletTokenQuery) ([]model.NftToken, int64, error) {
+	db := s.db.Table("nft_token")
+	tokens := make([]model.NftToken, 0, q.Limit)
+	var total int64
+	var ownerToken []struct {
+		CollectionAddress string
+		TokenId           string
+	}
+
+	ownerQ := s.db.Table("nft_owner").Select("collection_address,token_id").Where("owner_address = ?", q.WalletAddress)
+	if q.ChainId != nil {
+		ownerQ = ownerQ.Where("chain_id = ?", q.ChainId)
+	}
+	if q.CollectionAddresses != nil {
+		subq := ""
+		for _, v := range q.CollectionAddresses {
+			subq = subq + fmt.Sprintf("('%v'),", v)
+		}
+		subq = fmt.Sprintf("collection_address = ANY(VALUES %s)", subq[:len(subq)-1])
+		ownerQ = ownerQ.Where(subq)
+	}
+	// check if owner have no tokens
+	var tokensCount int64
+	if err := ownerQ.Count(&tokensCount).Find(&ownerToken).Error; err != nil {
+		return nil, 0, err
+	}
+	if tokensCount == 0 {
+		return tokens, 0, nil
+	}
+
+	subq := ""
+	for _, v := range ownerToken {
+		subq = subq + fmt.Sprintf("('%v','%v'),", v.CollectionAddress, v.TokenId)
+	}
+	subq = fmt.Sprintf("(collection_address,token_id) = ANY(VALUES %s)", subq[:len(subq)-1])
+
+	db = db.Where(subq)
+	if len(q.Sort) > 0 {
+		db = db.Order(q.Sort)
+	}
+	if err := db.Count(&total).Offset(q.Offset).Limit(q.Limit).Find(&tokens).Error; err != nil {
+		return nil, 0, err
+	}
+	return tokens, total, nil
+}
+
+func (pg *store) GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error) {
+	var tokenAttributes []model.NftTokenAttribute
+	err := pg.db.Table("nft_token_attribute").Where("collection_address = ? AND token_id = ?", collectionAddress, tokenID).Find(&tokenAttributes).Error
+	if err != nil {
+		return nil, err
+	}
+	return tokenAttributes, nil
 }

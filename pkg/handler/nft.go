@@ -465,3 +465,66 @@ func (h *Handler) GetNftTokenTransactionHistory(c *gin.Context) {
 
 	c.JSON(http.StatusOK, response.CreateResponse(txHistory, nil, nil, nil))
 }
+
+// GetNftTokensByWalletAddress godoc
+// @Summary     Get nft tokens by owner address
+// @Description Get nft tokens by owner address
+// @Tags        Wallet
+// @Accept      json
+// @Produce     json
+// @Param       wallet_address path string true "wallet address"
+// @Param       parameters              query     request.GetNftTokensByAddressRequest false "get tokens by wallet address query"
+// @Success     200 {object} response.GetNftTokensResponse
+// @Error       400 {object} response.ErrorResponse
+// @Error       404 {object} response.ErrorResponse
+// @Error       500 {object} response.ErrorResponse
+// @Router      /{wallet_address}/nft [get]
+func (h *Handler) GetNftTokensByWalletAddress(c *gin.Context) {
+	var params struct {
+		Address string `uri:"wallet_address" binding:"address" msg:"wallet_address is required"`
+	}
+
+	if err := c.ShouldBindUri(&params); err != nil {
+		h.logger.Fields(logger.Fields{
+			"address": params.Address,
+		}).Error(err, "No wallet_address passed")
+		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, params))
+		return
+	}
+
+	walletAddress, err := utils.StringToHashAddress(params.Address)
+	if err != nil {
+		h.logger.Fields(logger.Fields{
+			"address": walletAddress,
+		}).Error(err, "Can't convert input to hash address")
+		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
+		return
+	}
+
+	var req request.GetNftTokensByAddressRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		h.logger.Fields(logger.Fields{
+			"address": walletAddress,
+		}).Error(err, "Can't bind query params to struct request.GetNftTokensByAddressQuery")
+		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, req))
+		return
+	}
+
+	tokens, total, err := h.entities.Nft.GetNftTokensByWalletAddress(walletAddress, req)
+	if err != nil {
+		h.logger.Fields(logger.Fields{
+			"address": walletAddress,
+			"request": req,
+		}).Error(err, "Can't get NFT tokens by wallet address")
+		c.JSON(http.StatusInternalServerError, response.CreateResponse[any](nil, nil, err, nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, response.CreateResponse(tokens, &response.PaginationResponse{
+		Pagination: model.Pagination{
+			Page: req.Page,
+			Size: req.Size,
+		},
+		Total: total,
+	}, nil, nil))
+}
