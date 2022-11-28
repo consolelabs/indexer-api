@@ -43,16 +43,19 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, errors.New("Address does not have correct format"), nil))
 		return
 	}
+	if body.ChainId != 0 {
+		body.Address = checksumAddress
+	}
 
 	err = h.entities.Contract.AddContract(model.Contract{
-		Address:     checksumAddress,
+		Address:     body.Address,
 		ChainId:     int64(body.ChainId),
 		GrpcAddress: "indexer-grpc:80",
 		Type:        "ERC721",
 	})
 	if err != nil {
 		h.logger.Fields(logger.Fields{
-			"address": checksumAddress,
+			"address": body.Address,
 			"chainId": body.ChainId,
 		}).Error(err, "Cannot add contract")
 		code := http.StatusInternalServerError
