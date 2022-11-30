@@ -167,7 +167,7 @@ func Test_contractEntity_AddContract(t *testing.T) {
 				store:   tt.fields.store,
 				service: tt.fields.service,
 			}
-			if err := e.AddContract(tt.args.contract); (err != nil) != tt.wantErr {
+			if err := e.AddContract(tt.args.contract, "", ""); (err != nil) != tt.wantErr {
 				t.Errorf("contractEntity.AddContract() error = %v, wantErr %v", err, tt.wantErr)
 			}
 		})

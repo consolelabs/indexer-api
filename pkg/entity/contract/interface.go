@@ -5,6 +5,6 @@ import (
 )
 
 type IContractEntity interface {
-	AddContract(contract model.Contract) error
+	AddContract(contract model.Contract, name string, symbol string) error
 	GetContract(address string) (*model.Contract, error)
 }
