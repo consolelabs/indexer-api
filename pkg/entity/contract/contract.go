@@ -23,7 +23,7 @@ func New(store *store.Store, service *service.Service) IContractEntity {
 	}
 }
 
-func (e *contractEntity) AddContract(contract model.Contract) error {
+func (e *contractEntity) AddContract(contract model.Contract, name string, symbol string) error {
 	oldContract, _ := e.store.Contract.GetByAddress(contract.Address)
 	if oldContract != nil {
 		return errors.New("address has been added")
@@ -63,14 +63,19 @@ func (e *contractEntity) AddContract(contract model.Contract) error {
 		contract.CreationBlock = creationBlockNumber
 	}
 
+	ercFormat := "ERC_721"
+	if contract.ChainId == 0 || contract.ChainId == 9999 || contract.ChainId == 9998 {
+		ercFormat = ""
+	}
 	// store nft collection
 	err = e.store.Nft.SaveNftCollection(&model.NftCollection{
 		Address:         contract.Address,
 		ChainId:         int64(contract.ChainId),
 		CreatedTime:     time.Now(),
 		LastUpdatedTime: time.Now(),
-		// Name:    name,
-		// Symbol:  symbol,
+		Name:            name,
+		Symbol:          symbol,
+		ERCFormat:       ercFormat,
 	})
 	if err != nil {
 		return err

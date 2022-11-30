@@ -52,7 +52,7 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		ChainId:     int64(body.ChainId),
 		GrpcAddress: "indexer-grpc:80",
 		Type:        "ERC721",
-	})
+	}, body.Name, body.Symbol)
 	if err != nil {
 		h.logger.Fields(logger.Fields{
 			"address": body.Address,
