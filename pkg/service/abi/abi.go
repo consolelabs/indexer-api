@@ -2,6 +2,7 @@ package abi
 
 import (
 	"context"
+	"errors"
 
 	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/constant"
@@ -52,4 +53,39 @@ func (e *abiEntity) selectRpcUrl(chainId int64) string {
 	default:
 		return e.config.RpcUrl.Eth
 	}
+}
+
+func (e *abiEntity) GetNameAndSymbol(address string, chainId int64) (name string, symbol string, err error) {
+	if chainId == 99999999 {
+		return "", "", nil
+	}
+	rpcUrl := e.selectRpcUrl(chainId)
+	client, err := ethclient.Dial(rpcUrl)
+	if err != nil {
+		return "", "", err
+	}
+
+	addressHash := common.HexToAddress(address)
+	instance, err := abi.NewERC721(addressHash, client)
+	if err != nil {
+		return "", "", err
+	}
+	name, err = instance.Name(&bind.CallOpts{})
+	if err != nil {
+		if err.Error() == "execution reverted" {
+			return "", "", errors.New("This collection does not support collection name")
+		} else {
+			return "", "", err
+		}
+
+	}
+	symbol, err = instance.Symbol(&bind.CallOpts{})
+	if err != nil {
+		if err.Error() == "execution reverted" {
+			return "", "", errors.New("This collection does not support collection symbol")
+		} else {
+			return "", "", err
+		}
+	}
+	return name, symbol, nil
 }

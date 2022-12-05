@@ -13,6 +13,7 @@ import (
 	chaindata "github.com/consolelabs/indexer-api/pkg/service/chain_data"
 	chainexplorer "github.com/consolelabs/indexer-api/pkg/service/chain_explorer"
 	"github.com/consolelabs/indexer-api/pkg/service/gcs"
+	solscan "github.com/consolelabs/indexer-api/pkg/service/solscan"
 )
 
 type Service struct {
@@ -20,6 +21,7 @@ type Service struct {
 	ChainExplorer chainexplorer.IService
 	Abi           abi.IService
 	Gcs           gcs.IService
+	Solscan       solscan.IService
 }
 
 func New(cfg *config.Config) *Service {
@@ -29,6 +31,7 @@ func New(cfg *config.Config) *Service {
 		ChainExplorer: chainexplorer.New(cfg),
 		Abi:           abi.New(cfg),
 		Gcs:           gcs.New(cfg),
+		Solscan:       solscan.New(cfg),
 	}
 }
 

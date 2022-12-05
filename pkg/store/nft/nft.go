@@ -1035,3 +1035,11 @@ func (pg *store) GetAttributeByCollectionAddressTokenID(collectionAddress, token
 	}
 	return tokenAttributes, nil
 }
+
+func (s *store) GetMissingInfoCollection() (collections []model.NftCollection, err error) {
+	return collections, s.db.Table("nft_collection").Where("name = ''").Find(&collections).Error
+}
+
+func (s *store) UpdateMissingInfoCollection(model *model.NftCollection, name string, symbol string, ercFormat string) error {
+	return s.db.Model(&model).Updates(map[string]interface{}{"name": name, "symbol": symbol, "erc_format": ercFormat}).Error
+}

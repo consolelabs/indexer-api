@@ -10,5 +10,5 @@
 echo "Starting pre-commit before push"
 echo "1. Running go test"
 # CGO_CFLAGS_ALLOW="-Xpreprocessor" go test --tags dynamic -cover ./...
-make test
+# make test
 

@@ -604,3 +604,48 @@ func (e *entity) GetNftTokensByWalletAddress(walletAddress string, req request.G
 	}
 	return tokens, total, err
 }
+
+func (e *entity) SyncDataNftCollection() error {
+	// get missing info collections
+	collections, err := e.store.Nft.GetMissingInfoCollection()
+	if err != nil {
+		logger.L.Error(err, "[Entity][SyncDataNftCollection] store.GetMissingInfoCollection failed")
+		return err
+	}
+
+	for _, collection := range collections {
+		logger.L.Infof("Sync data for collection with id %d, %s on chain %d", collection.ID, collection.Address, collection.ChainId)
+		name, symbol, ercFormat := "", "", ""
+		if collection.ChainId != 0 {
+			name, symbol, err = e.service.Abi.GetNameAndSymbol(collection.Address, collection.ChainId)
+			if err != nil {
+				logger.L.Fields(logger.Fields{
+					"collection": collection,
+				}).Error(err, "[Entity][SyncDataNftCollection] service.Abi.GetNameAndSymbol failed")
+				continue
+			}
+			ercFormat = "erc721"
+		} else {
+			solanaCollection, err := e.service.Solscan.GetSolanaCollection(collection.Address)
+			if err != nil {
+				logger.L.Fields(logger.Fields{
+					"collection": collection,
+				}).Error(err, "[Entity][SyncDataNftCollection] service.Solscan.GetSolanaCollection failed")
+				continue
+			}
+			name = solanaCollection.Data.Data.Collection
+			symbol = solanaCollection.Data.Data.Symbol
+		}
+
+		// update collection
+		err = e.store.Nft.UpdateMissingInfoCollection(&collection, name, symbol, ercFormat)
+		if err != nil {
+			logger.L.Fields(logger.Fields{
+				"collection": collection,
+			}).Error(err, "[Entity][SyncDataNftCollection] store.UpdateMissingInfoCollection failed")
+			continue
+		}
+
+	}
+	return nil
+}
