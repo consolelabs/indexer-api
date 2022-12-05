@@ -34,11 +34,16 @@ func New(cfg *config.Config, kafkaCfg *Config) *Queue {
 		}
 
 		consumer, err := kafka.NewConsumer(&kafka.ConfigMap{
-			"bootstrap.servers":  cfg.Kafka.Servers,
-			"group.id":           cfg.Kafka.ConsumerGroup,
-			"auto.offset.reset":  "earliest",
-			"group.instance.id":  instanceId,
-			"session.timeout.ms": 300000,
+			"enable.partition.eof":            true,
+			"go.application.rebalance.enable": true,
+			"go.events.channel.enable":        true,
+			"enable.auto.commit":              "false",
+			"max.partition.fetch.bytes":       1048576 * 2,
+			"bootstrap.servers":               cfg.Kafka.Servers,
+			"group.id":                        cfg.Kafka.ConsumerGroup,
+			"auto.offset.reset":               "earliest",
+			"group.instance.id":               instanceId,
+			"session.timeout.ms":              5 * 60 * 1000,
 		})
 		if err != nil {
 			logger.L.Fatalf(err, "failed to create kafka consumer")
@@ -49,6 +54,8 @@ func New(cfg *config.Config, kafkaCfg *Config) *Queue {
 		producer, err := kafka.NewProducer(&kafka.ConfigMap{
 			"bootstrap.servers":       cfg.Kafka.Servers,
 			"go.produce.channel.size": 1000000,
+			"acks":                    "all",
+			"enable.idempotence":      true,
 		})
 		if err != nil {
 			logger.L.Fatalf(err, "failed to create kafka producer")
@@ -123,7 +130,7 @@ func (q *Queue) Enqueue(value message.KafkaMessage) error {
 	}
 	defer q.Producer().Flush(0)
 
-	topic := q.cfg.Kafka.IndexerTopic
+	topic := q.cfg.Kafka.ConsumerGroup
 
 	// use json.Marshal to conver KafkaMessage to []byte
 	bytes, err := json.Marshal(value)
