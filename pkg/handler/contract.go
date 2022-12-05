@@ -67,10 +67,9 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 	}
 
 	h.queue.Enqueue(message.KafkaMessage{
-		EnrichNftCollection: &message.EnrichNftCollectionMessage{
-			CollectionAddress: body.Address,
-			ChainId:           body.ChainId,
-		},
+		Topic:   "sync_full_collection",
+		Address: body.Address,
+		ChainId: body.ChainId,
 	})
 
 	c.JSON(http.StatusOK, response.CreateResponse("ok", nil, nil, nil))
