@@ -49,6 +49,21 @@ func (mr *MockINftMockRecorder) DeleteOwnerByCollectionAddressTokenId(collection
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOwnerByCollectionAddressTokenId", reflect.TypeOf((*MockINft)(nil).DeleteOwnerByCollectionAddressTokenId), collectionAddress, tokenId)
 }
 
+// GetAllCollectionsNotSentKafka mocks base method.
+func (m *MockINft) GetAllCollectionsNotSentKafka() ([]model.NftCollection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllCollectionsNotSentKafka")
+	ret0, _ := ret[0].([]model.NftCollection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllCollectionsNotSentKafka indicates an expected call of GetAllCollectionsNotSentKafka.
+func (mr *MockINftMockRecorder) GetAllCollectionsNotSentKafka() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllCollectionsNotSentKafka", reflect.TypeOf((*MockINft)(nil).GetAllCollectionsNotSentKafka))
+}
+
 // GetAttributeByCollectionAddressTokenID mocks base method.
 func (m *MockINft) GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error) {
 	m.ctrl.T.Helper()
@@ -389,6 +404,20 @@ func (m *MockINft) UpdateAttributeCount(count uint64, address, traitType, value 
 func (mr *MockINftMockRecorder) UpdateAttributeCount(count, address, traitType, value interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateAttributeCount", reflect.TypeOf((*MockINft)(nil).UpdateAttributeCount), count, address, traitType, value)
+}
+
+// UpdateCollectionSentKafka mocks base method.
+func (m *MockINft) UpdateCollectionSentKafka(address string, chainId int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateCollectionSentKafka", address, chainId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpdateCollectionSentKafka indicates an expected call of UpdateCollectionSentKafka.
+func (mr *MockINftMockRecorder) UpdateCollectionSentKafka(address, chainId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateCollectionSentKafka", reflect.TypeOf((*MockINft)(nil).UpdateCollectionSentKafka), address, chainId)
 }
 
 // UpdateListing mocks base method.

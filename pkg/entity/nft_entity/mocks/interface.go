@@ -7,7 +7,9 @@ package mock_nftentity
 import (
 	reflect "reflect"
 
+	config "github.com/consolelabs/indexer-api/pkg/config"
 	model "github.com/consolelabs/indexer-api/pkg/model"
+	queue "github.com/consolelabs/indexer-api/pkg/queue"
 	request "github.com/consolelabs/indexer-api/pkg/request"
 	response "github.com/consolelabs/indexer-api/pkg/response"
 	gomock "github.com/golang/mock/gomock"
@@ -203,4 +205,18 @@ func (m *MockINftEntity) GetTokenDetail(address, tokenId string) (*model.NftToke
 func (mr *MockINftEntityMockRecorder) GetTokenDetail(address, tokenId interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetTokenDetail", reflect.TypeOf((*MockINftEntity)(nil).GetTokenDetail), address, tokenId)
+}
+
+// SendKafkaMessage mocks base method.
+func (m *MockINftEntity) SendKafkaMessage(cfg *config.Config, q *queue.Queue) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SendKafkaMessage", cfg, q)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SendKafkaMessage indicates an expected call of SendKafkaMessage.
+func (mr *MockINftEntityMockRecorder) SendKafkaMessage(cfg, q interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SendKafkaMessage", reflect.TypeOf((*MockINftEntity)(nil).SendKafkaMessage), cfg, q)
 }

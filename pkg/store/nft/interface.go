@@ -29,6 +29,8 @@ type INft interface {
 	GetCollections(query NftCollectionQuery) (data []model.NftCollection, total int64, err error)
 	SaveNftCollection(nftCollection *model.NftCollection) error
 	GetCollectionsByWalletAddress(query WalletCollectionQuery) (data []model.NftCollection, total int64, err error)
+	GetAllCollectionsNotSentKafka() (collections []model.NftCollection, err error)
+	UpdateCollectionSentKafka(address string, chainId int64) error
 
 	// Attribute
 	GetAttributesByCollectionAddress(collectionAddress string) ([]model.NftTokenAttribute, error)

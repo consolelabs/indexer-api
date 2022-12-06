@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
+	"github.com/k0kubun/pp"
 
 	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/logger"
@@ -130,6 +131,8 @@ func (q *Queue) Enqueue(chainId int64, value message.KafkaMessage) error {
 	defer q.Producer().Flush(0)
 
 	topic := q.ConsumerGroup(chainId)
+	pp.Println(topic)
+	pp.Println(value)
 	// use json.Marshal to conver KafkaMessage to []byte
 	bytes, err := json.Marshal(value)
 	if err != nil {

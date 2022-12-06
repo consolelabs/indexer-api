@@ -1,7 +1,9 @@
 package nftentity
 
 import (
+	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/model"
+	"github.com/consolelabs/indexer-api/pkg/queue"
 	"github.com/consolelabs/indexer-api/pkg/request"
 	"github.com/consolelabs/indexer-api/pkg/response"
 )
@@ -18,4 +20,5 @@ type INftEntity interface {
 	GetTokenActivities(collectionAddress, tokenId string, req request.GetNftTokenActivitiesRequest) (activities []*model.NftListing, total int64, err error)
 	GetNftTokenTransactionHistory(collectionAddress, tokenId string) ([]model.NftTxHistory, error)
 	GetNftTokensByWalletAddress(walletAddress string, query request.GetNftTokensByAddressRequest) (tokens []model.NftToken, total int64, err error)
+	SendKafkaMessage(cfg *config.Config, q *queue.Queue) error
 }

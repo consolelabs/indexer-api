@@ -6,14 +6,18 @@ import (
 	"math/big"
 	"time"
 
+	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/logger"
 	"github.com/consolelabs/indexer-api/pkg/model"
+	"github.com/consolelabs/indexer-api/pkg/queue"
+	"github.com/consolelabs/indexer-api/pkg/queue/message"
 	"github.com/consolelabs/indexer-api/pkg/request"
 	"github.com/consolelabs/indexer-api/pkg/response"
 	"github.com/consolelabs/indexer-api/pkg/service"
 	"github.com/consolelabs/indexer-api/pkg/store"
 	"github.com/consolelabs/indexer-api/pkg/store/nft"
 	"github.com/consolelabs/indexer-api/pkg/utils"
+	"github.com/k0kubun/pp"
 	"gorm.io/gorm"
 )
 
@@ -603,4 +607,29 @@ func (e *entity) GetNftTokensByWalletAddress(walletAddress string, req request.G
 		tokens[i].Attributes = att
 	}
 	return tokens, total, err
+}
+
+func (e *entity) SendKafkaMessage(cfg *config.Config, q *queue.Queue) error {
+	collectionNotSendKafka, err := e.store.Nft.GetAllCollectionsNotSentKafka()
+	if err != nil {
+		logger.L.Error(err, "[Entity][SendKafkaMessage] store.GetAllCollectionsNotSentKafka failed")
+		return err
+	}
+	pp.Println(len(collectionNotSendKafka))
+
+	for _, collection := range collectionNotSendKafka {
+		logger.L.Infof("[Entity][SendKafkaMessage] send kafka for collection %s on chain %d", collection.Address, collection.ChainId)
+		q.Enqueue(collection.ChainId, message.KafkaMessage{
+			Topic:   "sync_full_collection",
+			Address: collection.Address,
+			ChainId: collection.ChainId,
+		})
+
+		err = e.store.Nft.UpdateCollectionSentKafka(collection.Address, collection.ChainId)
+		if err != nil {
+			logger.L.Fields(logger.Fields{"address": collection.Address, "chainID": collection.ChainId}).Error(err, "[Entity][SendKafkaMessage] store.UpdateCollectionSentKafka failed")
+			return err
+		}
+	}
+	return nil
 }
