@@ -40,7 +40,6 @@ func New(cfg *config.Config, kafkaCfg *Config) *Queue {
 			"enable.auto.commit":              "false",
 			"max.partition.fetch.bytes":       1048576 * 2,
 			"bootstrap.servers":               cfg.Kafka.Servers,
-			"group.id":                        cfg.Kafka.ConsumerGroup,
 			"auto.offset.reset":               "earliest",
 			"group.instance.id":               instanceId,
 			"session.timeout.ms":              5 * 60 * 1000,
@@ -124,14 +123,13 @@ func (q *Queue) ProducerReport() error {
 	return nil
 }
 
-func (q *Queue) Enqueue(value message.KafkaMessage) error {
+func (q *Queue) Enqueue(chainId int64, value message.KafkaMessage) error {
 	if q.producer == nil {
 		return errors.New("producer is not initialized")
 	}
 	defer q.Producer().Flush(0)
 
-	topic := q.cfg.Kafka.ConsumerGroup
-
+	topic := q.ConsumerGroup(chainId)
 	// use json.Marshal to conver KafkaMessage to []byte
 	bytes, err := json.Marshal(value)
 	if err != nil {
@@ -147,4 +145,23 @@ func (q *Queue) Enqueue(value message.KafkaMessage) error {
 	}
 
 	return nil
+}
+
+func (q *Queue) ConsumerGroup(chainId int64) string {
+	switch chainId {
+	case 1:
+		return q.cfg.Kafka.EvmConsumerGroup
+	case 250:
+		return q.cfg.Kafka.EvmConsumerGroup
+	case 10:
+		return q.cfg.Kafka.EvmConsumerGroup
+	case 0:
+		return q.cfg.Kafka.SolanaConsumerGroup
+	case 9999:
+		return q.cfg.Kafka.AptosConsumerGroup
+	case 9998:
+		return q.cfg.Kafka.RoninConsumerGroup
+	default:
+		return q.cfg.Kafka.ConsumerGroup
+	}
 }
