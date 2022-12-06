@@ -1037,7 +1037,7 @@ func (pg *store) GetAttributeByCollectionAddressTokenID(collectionAddress, token
 }
 
 func (pg *store) GetAllCollectionsNotSentKafka() (collections []model.NftCollection, err error) {
-	return collections, pg.db.Table("nft_collection").Where("is_kafka_sent = ? and NOT chain_id = ? and id >= ?", false, 1, 5656).Find(&collections).Error
+	return collections, pg.db.Table("nft_collection").Where("is_kafka_sent = ? and  (chain_id = ? or chain_id = ?) and id >= ?", false, 0, 250, 5656).Find(&collections).Error
 }
 
 func (pg *store) UpdateCollectionSentKafka(address string, chainId int64) error {
