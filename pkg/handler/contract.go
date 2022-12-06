@@ -66,7 +66,7 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		return
 	}
 
-	h.queue.Enqueue(message.KafkaMessage{
+	h.queue.Enqueue(body.ChainId, message.KafkaMessage{
 		Topic:   "sync_full_collection",
 		Address: body.Address,
 		ChainId: body.ChainId,

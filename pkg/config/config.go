@@ -71,9 +71,13 @@ type MarketplaceApiKey struct {
 }
 
 type Kafka struct {
-	Servers       string
-	IndexerTopic  string
-	ConsumerGroup string
+	Servers             string
+	IndexerTopic        string
+	ConsumerGroup       string
+	EvmConsumerGroup    string
+	AptosConsumerGroup  string
+	RoninConsumerGroup  string
+	SolanaConsumerGroup string
 }
 
 func generateConfigFromViper(v *viper.Viper) *Config {
@@ -91,9 +95,13 @@ func generateConfigFromViper(v *viper.Viper) *Config {
 		},
 
 		Kafka: Kafka{
-			Servers:       v.GetString("KAFKA_SERVERS"),
-			IndexerTopic:  v.GetString("KAFKA_INDEXER_TOPIC"),
-			ConsumerGroup: v.GetString("KAFKA_CONSUMER_GROUP"),
+			Servers:             v.GetString("KAFKA_SERVERS"),
+			IndexerTopic:        v.GetString("KAFKA_INDEXER_TOPIC"),
+			ConsumerGroup:       v.GetString("KAFKA_CONSUMER_GROUP"),
+			EvmConsumerGroup:    v.GetString("KAFKA_EVM_CONSUMER_GROUP"),
+			AptosConsumerGroup:  v.GetString("KAFKA_APTOS_CONSUMER_GROUP"),
+			RoninConsumerGroup:  v.GetString("KAFKA_RONIN_CONSUMER_GROUP"),
+			SolanaConsumerGroup: v.GetString("KAFKA_SOL_CONSUMER_GROUP"),
 		},
 
 		GoogleServiceAccountKey: v.GetString("GOOGLE_SERVICE_ACCOUNT_KEY"),
