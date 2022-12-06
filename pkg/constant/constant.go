@@ -34,7 +34,7 @@ var C = Constant{
 		Ftm: 250,
 		Opt: 10,
 		Bsc: 56,
-		Apt: 99999999,
+		Apt: 9999,
 	},
 	ERC721ContractAddress:    "0x7D1070fdbF0eF8752a9627a79b00221b53F231fA",
 	PaintswapContractAddress: "0x6125fD14b6790d5F66509B7aa53274c93dAE70B9",
