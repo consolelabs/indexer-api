@@ -71,6 +71,16 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		Address: body.Address,
 		ChainId: body.ChainId,
 	})
+	h.queue.Enqueue(body.ChainId, message.KafkaMessage{
+		Topic:   "notify_collection_integration",
+		Address: body.Address,
+		ChainId: body.ChainId,
+		NotifyNftCollectionIntegration: &message.NotifyNftCollectionIntegrationMessage{
+			GuildId:   body.GuildId,
+			ChannelId: body.ChannelId,
+			MessageId: body.MessageId,
+		},
+	})
 
 	c.JSON(http.StatusOK, response.CreateResponse("ok", nil, nil, nil))
 }
