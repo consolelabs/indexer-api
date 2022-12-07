@@ -6,7 +6,8 @@ type KafkaMessage struct {
 	// EnrichNftCollection      *EnrichNftCollectionMessage
 	// EnrichNftRarityCalculate *EnrichNftRarityCalculateMessage
 	// UploadingImage           *ImageUploadingMessage
-	Topic   string `json:"topic"`
-	Address string `json:"address"`
-	ChainId int64  `json:"chain_id"`
+	Topic                          string                                 `json:"topic"`
+	Address                        string                                 `json:"address"`
+	ChainId                        int64                                  `json:"chain_id"`
+	NotifyNftCollectionIntegration *NotifyNftCollectionIntegrationMessage `json:"notify_nft_collection_integration"`
 }
