@@ -375,7 +375,7 @@ func (h *Handler) GetNftCollectionMetadata(c *gin.Context) {
 // @Router       /nft/{collection_address}/{token_id}/activity [get]
 func (h *Handler) GetNftTokenActivities(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address" binding:"address" msg:"invalid address"`
+		Address string `uri:"collection_address"`
 		TokenID string `uri:"token_id" binding:"required" msg:"token_id is required"`
 	}
 

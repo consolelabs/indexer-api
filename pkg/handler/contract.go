@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 
@@ -66,11 +67,21 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		return
 	}
 
-	h.queue.Enqueue(body.ChainId, message.KafkaMessage{
+	syncFullMsg, _ := json.Marshal(message.KafkaMessage{
 		Topic:   "sync_full_collection",
 		Address: body.Address,
 		ChainId: body.ChainId,
 	})
+	h.queue.Enqueue(body.ChainId, syncFullMsg)
+
+	integratedEvMsg, _ := json.Marshal(message.NftEventKafkaMessage{
+		Event: "collection_integrated",
+		Data: &message.NftEventKafkaMessageData{
+			Address: body.Address,
+			ChainId: body.ChainId,
+		},
+	})
+	h.queue.Enqueue(body.ChainId, integratedEvMsg)
 
 	c.JSON(http.StatusOK, response.CreateResponse("ok", nil, nil, nil))
 }

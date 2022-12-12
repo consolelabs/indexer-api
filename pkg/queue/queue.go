@@ -1,7 +1,6 @@
 package queue
 
 import (
-	"encoding/json"
 	"errors"
 	"os"
 
@@ -9,7 +8,6 @@ import (
 
 	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/logger"
-	"github.com/consolelabs/indexer-api/pkg/queue/message"
 )
 
 type Queue struct {
@@ -123,25 +121,19 @@ func (q *Queue) ProducerReport() error {
 	return nil
 }
 
-func (q *Queue) Enqueue(chainId int64, value message.KafkaMessage) error {
+func (q *Queue) Enqueue(chainId int64, value []byte) error {
 	if q.producer == nil {
 		return errors.New("producer is not initialized")
 	}
 	defer q.Producer().Flush(0)
 
 	topic := q.ConsumerGroup(chainId)
-	// use json.Marshal to conver KafkaMessage to []byte
-	bytes, err := json.Marshal(value)
-	if err != nil {
-		return err
-	}
-
 	q.producer.ProduceChannel() <- &kafka.Message{
 		TopicPartition: kafka.TopicPartition{
 			Topic:     &topic,
 			Partition: kafka.PartitionAny,
 		},
-		Value: bytes,
+		Value: value,
 	}
 
 	return nil
