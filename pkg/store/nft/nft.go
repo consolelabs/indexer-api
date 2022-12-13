@@ -1035,3 +1035,37 @@ func (pg *store) GetAttributeByCollectionAddressTokenID(collectionAddress, token
 	}
 	return tokenAttributes, nil
 }
+
+func (pg *store) GetAllMarketplacePlatform() (platforms []model.MarketplacePlatform, err error) {
+	return platforms, pg.db.Table("marketplace_platform").Find(&platforms).Error
+}
+
+func (pg *store) SummarizeSnapshotCollection(platformId int64) error {
+	query := `
+		INSERT INTO nft_marketplace_collection_snapshot (collection_address, token_id, platform_id, total_volume, created_time, floor_price)
+		SELECT
+			contract_address,
+			payment_token,
+			platform_id,
+			sum(sold_price::NUMERIC) AS total_volume,
+			date(created_time) AS created_time,
+			min(sold_price::NUMERIC) AS floor_price
+		FROM
+			nft_listing
+		WHERE
+			platform_id = %v
+		GROUP BY
+			contract_address,
+			payment_token,
+			date(created_time),
+			platform_id
+		ORDER BY
+			date(created_time) ON CONFLICT (platform_id,
+				collection_address,
+				token_id,
+				created_time) DO UPDATE SET total_volume = nft_marketplace_collection_snapshot.total_volume, floor_price = nft_marketplace_collection_snapshot.floor_price;
+	`
+	pg.db.Exec(fmt.Sprintf(query, platformId))
+
+	return nil
+}

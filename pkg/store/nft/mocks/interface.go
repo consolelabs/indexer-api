@@ -49,6 +49,21 @@ func (mr *MockINftMockRecorder) DeleteOwnerByCollectionAddressTokenId(collection
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteOwnerByCollectionAddressTokenId", reflect.TypeOf((*MockINft)(nil).DeleteOwnerByCollectionAddressTokenId), collectionAddress, tokenId)
 }
 
+// GetAllMarketplacePlatform mocks base method.
+func (m *MockINft) GetAllMarketplacePlatform() ([]model.MarketplacePlatform, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetAllMarketplacePlatform")
+	ret0, _ := ret[0].([]model.MarketplacePlatform)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetAllMarketplacePlatform indicates an expected call of GetAllMarketplacePlatform.
+func (mr *MockINftMockRecorder) GetAllMarketplacePlatform() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAllMarketplacePlatform", reflect.TypeOf((*MockINft)(nil).GetAllMarketplacePlatform))
+}
+
 // GetAttributeByCollectionAddressTokenID mocks base method.
 func (m *MockINft) GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error) {
 	m.ctrl.T.Helper()
@@ -375,6 +390,20 @@ func (m *MockINft) SaveTransfer(transfer *model.NftTransfer) error {
 func (mr *MockINftMockRecorder) SaveTransfer(transfer interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SaveTransfer", reflect.TypeOf((*MockINft)(nil).SaveTransfer), transfer)
+}
+
+// SummarizeSnapshotCollection mocks base method.
+func (m *MockINft) SummarizeSnapshotCollection(platformId int64) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "SummarizeSnapshotCollection", platformId)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// SummarizeSnapshotCollection indicates an expected call of SummarizeSnapshotCollection.
+func (mr *MockINftMockRecorder) SummarizeSnapshotCollection(platformId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "SummarizeSnapshotCollection", reflect.TypeOf((*MockINft)(nil).SummarizeSnapshotCollection), platformId)
 }
 
 // UpdateAttributeCount mocks base method.

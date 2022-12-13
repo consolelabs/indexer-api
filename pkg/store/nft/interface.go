@@ -37,9 +37,11 @@ type INft interface {
 
 	// Marketplace Platform
 	GetPlatformsByCollectionAddress(collectionAddress string) ([]model.MarketplacePlatform, error)
+	GetAllMarketplacePlatform() (platforms []model.MarketplacePlatform, err error)
 
 	// Collection snapshot
 	GetNftMarketplaceCollectionSnapshots(query NftTickerQuery) ([]model.NftMarketplaceCollectionSnapshot, error)
+	SummarizeSnapshotCollection(platformId int64) error
 
 	//Metadata
 	GetNftMetadataAttributesIcon(query NftAttributeIconQuery) (icons []model.NftMetadataAttributesIcon, total int64, err error)
