@@ -35,17 +35,17 @@ func (m *MockIContractEntity) EXPECT() *MockIContractEntityMockRecorder {
 }
 
 // AddContract mocks base method.
-func (m *MockIContractEntity) AddContract(contract model.Contract) error {
+func (m *MockIContractEntity) AddContract(contract model.Contract, name, symbol string) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "AddContract", contract)
+	ret := m.ctrl.Call(m, "AddContract", contract, name, symbol)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // AddContract indicates an expected call of AddContract.
-func (mr *MockIContractEntityMockRecorder) AddContract(contract interface{}) *gomock.Call {
+func (mr *MockIContractEntityMockRecorder) AddContract(contract, name, symbol interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContract", reflect.TypeOf((*MockIContractEntity)(nil).AddContract), contract)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AddContract", reflect.TypeOf((*MockIContractEntity)(nil).AddContract), contract, name, symbol)
 }
 
 // GetContract mocks base method.
