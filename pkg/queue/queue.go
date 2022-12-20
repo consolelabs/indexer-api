@@ -2,7 +2,9 @@ package queue
 
 import (
 	"errors"
+	"math/rand"
 	"os"
+	"strconv"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 
@@ -134,6 +136,8 @@ func (q *Queue) Enqueue(chainId int64, value []byte) error {
 			Partition: kafka.PartitionAny,
 		},
 		Value: value,
+		// random key to ensure that all messages are sent to different partitions
+		Key: []byte(strconv.Itoa(rand.Intn(100000))),
 	}
 
 	return nil
