@@ -31,32 +31,14 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 
 	var (
 		creationBlockNumber int64
-		blockStats          *model.BlockStats
 		err                 error
 	)
 
-	// handle for case evm, case solana assign chainId 0 for now
-	// TODO(trkhoi): get creation block number for solana contract
 	if contract.ChainId != 0 {
 		// fetch creation block from chain explorer (etherscan, ftmscan, bscscan, ...)
 		creationBlockNumber, err = e.service.ChainExplorer.GetCreationBlockNumber(contract)
 		if err != nil {
 			return err
-		}
-
-		// for case evm, check if creation block is synced
-		// chainId = 9999 means Aptos, no need
-		if contract.ChainId != 9999 {
-			// fetch current synced block from clickhouse
-			blockStats, err = e.service.ChainData.GetBlockStatsByChainId(contract.ChainId)
-			if err != nil {
-				return err
-			}
-
-			// check if we already synced all block in clickhouse
-			if !isCreationBlockSynced(creationBlockNumber, blockStats, contract.ChainId) {
-				return errors.New("block number not synced yet, TODO: add to queue and try later")
-			}
 		}
 
 		// enrich data
