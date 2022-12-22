@@ -10,7 +10,7 @@ type GetNftCollectionsRequest struct {
 	*model.Pagination
 	Sort        string  `form:"sort" binding:"omitempty,oneof=one_day_volume -one_day_volume seven_day_volume -seven_day_volume thirty_day_volume -thirty_day_volume all_time_volume -all_time_volume floor_price -floor_price supply -supply name -name owners -owners" enums:"one_day_volume,-one_day_volume,seven_day_volume,-seven_day_volume,thirty_day_volume,-thirty_day_volume,all_time_volume,-all_time_volume,floor_price,-floor_price,supply,-supply,name,-name,owners,-owners"`
 	Name        *string `json:"name" form:"name"`                                                                                                                        // search collection name
-	Address     *string `json:"address" form:"address" binding:"omitempty,address"`                                                                                      // collection address
+	Address     *string `json:"address" form:"address" binding:"omitempty"`                                                                                              // collection address
 	Marketplace *string `json:"marketplace" form:"marketplace" binding:"omitempty,oneof=paintswap nftkey opensea looksrare"  enums:"paintswap,nftkey,opensea,looksrare"` // marketplace
 }
 

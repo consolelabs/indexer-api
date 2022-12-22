@@ -73,7 +73,7 @@ func (h *Handler) GetNftDetail(c *gin.Context) {
 // @Router       /nft/ticker/{collection_address} [get]
 func (h *Handler) GetNftCollectionTickers(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address" binding:"address" msg:"invalid address"`
+		Address string `uri:"collection_address" binding:"required" msg:"required address"`
 	}
 
 	if err := c.ShouldBindUri(&params); err != nil {
@@ -82,22 +82,15 @@ func (h *Handler) GetNftCollectionTickers(c *gin.Context) {
 		return
 	}
 
-	address, err := utils.StringToHashAddress(params.Address)
-	if err != nil {
-		h.logger.Field("address", address).Error(err, "Can't convert input to hash address")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-		return
-	}
-
 	var req request.GetNftTickersRequest
-	l := h.logger.Fields(logger.Fields{"address": address, "request": req})
+	l := h.logger.Fields(logger.Fields{"address": params.Address, "request": req})
 	if err := c.ShouldBindQuery(&req); err != nil {
 		l.Error(err, "Invalid from/to query")
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, req))
 		return
 	}
 
-	collection, err := h.entities.Nft.GetNftCollectionTickers(address, req)
+	collection, err := h.entities.Nft.GetNftCollectionTickers(params.Address, req)
 	if utils.IsRecordNotFound(err) {
 		l.Error(err, "NFT collection not found")
 		c.JSON(http.StatusNotFound, response.CreateResponse[any](nil, nil, err, nil))
@@ -125,13 +118,6 @@ func (h *Handler) GetNftCollectionTickers(c *gin.Context) {
 func (h *Handler) GetNftTokenTickers(c *gin.Context) {
 	address := c.Param("collection_address")
 	tokenID := c.Param("token_id")
-
-	address, err := utils.StringToHashAddress(address)
-	if err != nil {
-		h.logger.Field("address", address).Error(err, "Can't convert input to hash address")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-		return
-	}
 
 	l := h.logger.Fields(logger.Fields{"address": address})
 	var req request.GetNftTickersRequest
@@ -194,13 +180,6 @@ func (h *Handler) GetNftCollections(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
 		return
 	}
-	if req.Address != nil {
-		if *req.Address, err = utils.StringToHashAddress(*req.Address); err != nil {
-			h.logger.Fields(logger.Fields{"request": req}).Error(err, "Can't convert input to hash address")
-			c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-			return
-		}
-	}
 
 	collections, total, err := h.entities.Nft.GetNftCollections(req)
 	if err != nil {
@@ -236,37 +215,27 @@ func (h *Handler) GetNftCollections(c *gin.Context) {
 // @Router       /nft/{collection_address} [get]
 func (h *Handler) GetNftTokens(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address" binding:"address" msg:"invalid address"`
+		Address string `uri:"collection_address"`
 	}
 
 	if err := c.ShouldBindUri(&params); err != nil {
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, params))
 		return
 	}
-
-	address, err := utils.StringToHashAddress(params.Address)
-	if err != nil {
-		h.logger.Fields(logger.Fields{
-			"address": address,
-		}).Error(err, "Can't convert input to hash address")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-		return
-	}
-
 	var req request.GetNftTokensRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
 		h.logger.Fields(logger.Fields{
-			"address": address,
+			"address": params.Address,
 			"req":     req,
 		}).Error(err, "Can't bind query params to struct request.GetNftTokensQuery")
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, req))
 		return
 	}
 
-	tokens, total, err := h.entities.Nft.GetNftTokens(address, req)
+	tokens, total, err := h.entities.Nft.GetNftTokens(params.Address, req)
 	if err != nil {
 		h.logger.Fields(logger.Fields{
-			"address": address,
+			"address": params.Address,
 			"request": req,
 		}).Error(err, "Can't get NFT tokens")
 		c.JSON(http.StatusInternalServerError, response.CreateResponse[any](nil, nil, err, nil))
@@ -328,7 +297,7 @@ func (h *Handler) GetNftMetadataAttributesIcon(c *gin.Context) {
 // @Router       /nft/{collection_address}/metadata [get]
 func (h *Handler) GetNftCollectionMetadata(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address" binding:"address" msg:"invalid address"`
+		Address string `uri:"collection_address"`
 	}
 
 	log := h.logger.AddField("address", params.Address)
@@ -338,14 +307,7 @@ func (h *Handler) GetNftCollectionMetadata(c *gin.Context) {
 		return
 	}
 
-	collectionAddress, err := utils.StringToHashAddress(params.Address)
-	if err != nil {
-		log.Error(err, "Can't convert input to hash address")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-		return
-	}
-
-	res, err := h.entities.Nft.GetCollectionMetadata(collectionAddress)
+	res, err := h.entities.Nft.GetCollectionMetadata(params.Address)
 	if utils.IsRecordNotFound(err) {
 		log.Error(err, "NFT collection not found")
 		c.JSON(http.StatusNotFound, response.CreateResponse[any](nil, nil, err, nil))
@@ -375,7 +337,7 @@ func (h *Handler) GetNftCollectionMetadata(c *gin.Context) {
 // @Router       /nft/{collection_address}/{token_id}/activity [get]
 func (h *Handler) GetNftTokenActivities(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address"`
+		Address string `uri:"collection_address" binding:"required" msg:"collection_address is required"`
 		TokenID string `uri:"token_id" binding:"required" msg:"token_id is required"`
 	}
 
@@ -393,13 +355,6 @@ func (h *Handler) GetNftTokenActivities(c *gin.Context) {
 		"id":      params.TokenID,
 	})
 
-	address, err := utils.StringToHashAddress(params.Address)
-	if err != nil {
-		log.Error(err, "Can't convert input to hash address")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, nil))
-		return
-	}
-
 	// query params
 	var req request.GetNftTokenActivitiesRequest
 	if err := c.ShouldBindQuery(&req); err != nil {
@@ -410,7 +365,7 @@ func (h *Handler) GetNftTokenActivities(c *gin.Context) {
 		return
 	}
 
-	activities, total, err := h.entities.Nft.GetTokenActivities(address, params.TokenID, req)
+	activities, total, err := h.entities.Nft.GetTokenActivities(params.Address, params.TokenID, req)
 	if err != nil {
 		log.Error(err, "Can't get token activities")
 		c.JSON(http.StatusInternalServerError, response.CreateResponse[any](nil, nil, err, nil))
@@ -440,7 +395,7 @@ func (h *Handler) GetNftTokenActivities(c *gin.Context) {
 // @Router       /nft/{collection_address}/{token_id}/transaction-history [get]
 func (h *Handler) GetNftTokenTransactionHistory(c *gin.Context) {
 	var params struct {
-		Address string `uri:"collection_address" binding:"required"`
+		Address string `uri:"collection_address" binding:"required" msg:"collection_address is required"`
 		TokenID string `uri:"token_id" binding:"required" msg:"token_id is required"`
 	}
 
