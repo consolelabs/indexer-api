@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -68,7 +67,6 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 		return
 	}
 
-	fmt.Println("check priority flag: ", body.PriorityFlag)
 	syncFullMsg, _ := json.Marshal(message.KafkaMessage{
 		Topic:   "sync_full_collection",
 		Address: body.Address,
@@ -76,10 +74,10 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 	})
 
 	if body.PriorityFlag {
-		fmt.Println("enqueue with priority")
+		h.logger.Fields(logger.Fields{"address": body.Address, "chainId": body.ChainId}).Info("enqueue with priority")
 		h.queue.PriorityEnqueue(body.ChainId, syncFullMsg)
 	} else {
-		fmt.Println("enqueue without priority")
+		h.logger.Fields(logger.Fields{"address": body.Address, "chainId": body.ChainId}).Info("enqueue with non priority")
 		h.queue.Enqueue(body.ChainId, syncFullMsg)
 	}
 

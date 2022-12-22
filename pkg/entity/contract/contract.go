@@ -55,8 +55,6 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 		ChainId:         int64(contract.ChainId),
 		CreatedTime:     time.Now(),
 		LastUpdatedTime: time.Now(),
-		Name:            name,
-		Symbol:          symbol,
 		ERCFormat:       ercFormat,
 	})
 	if err != nil {
