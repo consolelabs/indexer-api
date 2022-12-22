@@ -143,6 +143,26 @@ func (q *Queue) Enqueue(chainId int64, value []byte) error {
 	return nil
 }
 
+func (q *Queue) PriorityEnqueue(chainId int64, value []byte) error {
+	if q.producer == nil {
+		return errors.New("producer is not initialized")
+	}
+	defer q.Producer().Flush(0)
+
+	topic := q.cfg.Kafka.PriorityConsumerGroup
+	q.producer.ProduceChannel() <- &kafka.Message{
+		TopicPartition: kafka.TopicPartition{
+			Topic:     &topic,
+			Partition: kafka.PartitionAny,
+		},
+		Value: value,
+		// random key to ensure that all messages are sent to different partitions
+		Key: []byte(strconv.Itoa(rand.Intn(100000))),
+	}
+
+	return nil
+}
+
 func (q *Queue) ConsumerGroup(chainId int64) string {
 	switch chainId {
 	case 1:
