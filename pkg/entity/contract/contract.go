@@ -34,7 +34,7 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 		err                 error
 	)
 
-	if contract.ChainId != 0 {
+	if contract.ChainId != 0 && contract.ChainId != 66 {
 		// fetch creation block from chain explorer (etherscan, ftmscan, bscscan, ...)
 		creationBlockNumber, err = e.service.ChainExplorer.GetCreationBlockNumber(contract)
 		if err != nil {
