@@ -34,7 +34,7 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 		err                 error
 	)
 
-	if contract.ChainId != 0 && contract.ChainId != 66 {
+	if contract.ChainId != 0 && contract.ChainId != 66 && contract.ChainId != 9999 && contract.ChainId != 9998 {
 		// fetch creation block from chain explorer (etherscan, ftmscan, bscscan, ...)
 		creationBlockNumber, err = e.service.ChainExplorer.GetCreationBlockNumber(contract)
 		if err != nil {
@@ -50,16 +50,19 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 		ercFormat = ""
 	}
 	// store nft collection
-	err = e.store.Nft.SaveNftCollection(&model.NftCollection{
-		Address:         contract.Address,
-		ChainId:         int64(contract.ChainId),
-		CreatedTime:     time.Now(),
-		LastUpdatedTime: time.Now(),
-		ERCFormat:       ercFormat,
-	})
-	if err != nil {
-		return err
+	if contract.ChainId != 9999 {
+		err = e.store.Nft.SaveNftCollection(&model.NftCollection{
+			Address:         contract.Address,
+			ChainId:         int64(contract.ChainId),
+			CreatedTime:     time.Now(),
+			LastUpdatedTime: time.Now(),
+			ERCFormat:       ercFormat,
+		})
+		if err != nil {
+			return err
+		}
 	}
+
 	return e.store.Contract.Save(&contract)
 }
 
