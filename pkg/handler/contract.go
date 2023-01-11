@@ -35,17 +35,20 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 	// Validate correct format of contract address, not allow lowercase, currently set chainId = 0 for solana
 	// TODO(trkhoi): convert to correct format for solana
 	var checksumAddress string
-	checksumAddress, err := utils.StringToHashAddress(body.Address)
-	if err != nil {
-		h.logger.Fields(logger.Fields{
-			"address": body.Address,
-			"chainId": body.ChainId,
-		}).Error(err, "Address does not have correct format")
-		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, errors.New("Address does not have correct format"), nil))
-		return
-	}
-	if body.ChainId != 0 {
-		body.Address = checksumAddress
+	var err error
+	if body.ChainId != 9999 {
+		checksumAddress, err = utils.StringToHashAddress(body.Address)
+		if err != nil {
+			h.logger.Fields(logger.Fields{
+				"address": body.Address,
+				"chainId": body.ChainId,
+			}).Error(err, "Address does not have correct format")
+			c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, errors.New("Address does not have correct format"), nil))
+			return
+		}
+		if body.ChainId != 0 {
+			body.Address = checksumAddress
+		}
 	}
 
 	err = h.entities.Contract.AddContract(model.Contract{
