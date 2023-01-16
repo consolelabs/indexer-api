@@ -36,7 +36,7 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 	// TODO(trkhoi): convert to correct format for solana
 	var checksumAddress string
 	var err error
-	if body.ChainId != 9999 {
+	if body.ChainId != 9999 && body.ChainId != 9997 {
 		checksumAddress, err = utils.StringToHashAddress(body.Address)
 		if err != nil {
 			h.logger.Fields(logger.Fields{
