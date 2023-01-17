@@ -164,6 +164,7 @@ func (q *Queue) PriorityEnqueue(chainId int64, value []byte) error {
 }
 
 func (q *Queue) ConsumerGroup(chainId int64) string {
+	// Add more chain if needed
 	switch chainId {
 	case 1:
 		return q.cfg.Kafka.EvmConsumerGroup
