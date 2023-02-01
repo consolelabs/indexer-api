@@ -6,6 +6,8 @@ import (
 	"math/big"
 	"time"
 
+	"gorm.io/gorm"
+
 	"github.com/consolelabs/indexer-api/pkg/logger"
 	"github.com/consolelabs/indexer-api/pkg/model"
 	"github.com/consolelabs/indexer-api/pkg/request"
@@ -14,7 +16,6 @@ import (
 	"github.com/consolelabs/indexer-api/pkg/store"
 	"github.com/consolelabs/indexer-api/pkg/store/nft"
 	"github.com/consolelabs/indexer-api/pkg/utils"
-	"gorm.io/gorm"
 )
 
 type entity struct {
@@ -310,6 +311,17 @@ func (e *entity) GetCollectionMetadata(collectionAddress string) (*model.NftColl
 	}
 
 	return &coll, err
+}
+
+func (e *entity) GetNftSoulBound(collectionAddress string) ([]model.NftTokenAttrSoulBound, error) {
+	tokenAttrSoulBound, err := e.store.Nft.GetNftTokenAttrWithSoulBound(collectionAddress)
+	if err != nil {
+		logger.L.Fields(logger.Fields{
+			"collection_address": collectionAddress,
+		}).Errorf(err, "[Entity][GetNftSoulBound] store.GetNftTokenAttrWithSoulBound failed")
+		return nil, err
+	}
+	return tokenAttrSoulBound, nil
 }
 
 func (e *entity) GetTokenActivities(collectionAddress, tokenId string, req request.GetNftTokenActivitiesRequest) ([]*model.NftListing, int64, error) {

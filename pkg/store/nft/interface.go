@@ -34,6 +34,7 @@ type INft interface {
 	GetAttributesByCollectionAddress(collectionAddress string) ([]model.NftTokenAttribute, error)
 	UpdateAttributeCount(count uint64, address, traitType, value string) error
 	GetAttributeByCollectionAddressTokenID(collectionAddress, tokenID string) ([]model.NftTokenAttribute, error)
+	GetNftTokenAttrWithSoulBound(collectionAddress string) ([]model.NftTokenAttrSoulBound, error)
 
 	// Marketplace Platform
 	GetPlatformsByCollectionAddress(collectionAddress string) ([]model.MarketplacePlatform, error)

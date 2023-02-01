@@ -322,6 +322,44 @@ func (h *Handler) GetNftCollectionMetadata(c *gin.Context) {
 	c.JSON(http.StatusOK, response.CreateResponse(res, nil, nil, nil))
 }
 
+// GetNftSoulBound godoc
+// @Summary      Get nft collection metadata
+// @Description  Get nft collection metadata
+// @Tags         NFT
+// @Accept       json
+// @Produce      json
+// @Param        collection_address   path   string  true  "collection address"
+// @Success      200 {object} response.GetNftCollectionMetadataResponse
+// @Error        400 {object} response.ErrorResponse
+// @Error        500 {object} response.ErrorResponse
+// @Router       /nft/{collection_address}/metadata [get]
+func (h *Handler) GetNftSoulBound(c *gin.Context) {
+	var params struct {
+		Address string `uri:"collection_address"`
+	}
+
+	log := h.logger.AddField("address", params.Address)
+	if err := c.ShouldBindUri(&params); err != nil {
+		log.Error(err, "Time duration is not valid")
+		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, params))
+		return
+	}
+
+	res, err := h.entities.Nft.GetNftSoulBound(params.Address)
+	if utils.IsRecordNotFound(err) {
+		log.Error(err, "NFT collection not found")
+		c.JSON(http.StatusNotFound, response.CreateResponse[any](nil, nil, err, nil))
+		return
+	}
+	if err != nil {
+		log.Error(err, "[GetNftSoulBound] GetNftSoulBound failed")
+		c.JSON(http.StatusInternalServerError, response.CreateResponse[any](nil, nil, err, nil))
+		return
+	}
+
+	c.JSON(http.StatusOK, response.CreateResponse(res, nil, nil, nil))
+}
+
 // GetNftTokenActivities godoc
 // @Summary      Get nft token activities
 // @Description  Get nft token activities
