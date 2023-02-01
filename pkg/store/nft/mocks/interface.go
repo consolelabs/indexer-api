@@ -218,6 +218,21 @@ func (mr *MockINftMockRecorder) GetNftMetadataAttributesIcon(query interface{}) 
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftMetadataAttributesIcon", reflect.TypeOf((*MockINft)(nil).GetNftMetadataAttributesIcon), query)
 }
 
+// GetNftTokenAttrWithSoulBound mocks base method.
+func (m *MockINft) GetNftTokenAttrWithSoulBound(collectionAddress string) ([]model.NftTokenAttrSoulBound, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetNftTokenAttrWithSoulBound", collectionAddress)
+	ret0, _ := ret[0].([]model.NftTokenAttrSoulBound)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetNftTokenAttrWithSoulBound indicates an expected call of GetNftTokenAttrWithSoulBound.
+func (mr *MockINftMockRecorder) GetNftTokenAttrWithSoulBound(collectionAddress interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetNftTokenAttrWithSoulBound", reflect.TypeOf((*MockINft)(nil).GetNftTokenAttrWithSoulBound), collectionAddress)
+}
+
 // GetNftTokenTxHistory mocks base method.
 func (m *MockINft) GetNftTokenTxHistory(collectionAddress, tokenId string) ([]model.NftTxHistory, error) {
 	m.ctrl.T.Helper()
