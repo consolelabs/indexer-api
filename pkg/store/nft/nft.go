@@ -1069,3 +1069,42 @@ func (pg *store) SummarizeSnapshotCollection(platformId int64) error {
 
 	return nil
 }
+
+func (pg *store) GetNftTokenAttrWithSoulBound(collectionAddress string) ([]model.NftTokenAttrSoulBound, error) {
+	rows, err := pg.db.Raw(
+		`
+		SELECT
+			trait_type,
+			value,
+			count(value)
+		FROM
+			nft_token_attribute
+		WHERE
+			collection_address = $1
+			AND trait_type = 'Character'
+			AND token_id in( SELECT DISTINCT
+					(token_id)
+					FROM nft_token_attribute
+				WHERE
+					collection_address = $2
+					AND trait_type = 'Soulbound'
+					AND value = 'True')
+		GROUP BY
+			trait_type, value;
+		`, collectionAddress, collectionAddress).Rows()
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var soulBound []model.NftTokenAttrSoulBound
+	for rows.Next() {
+		h := model.NftTokenAttrSoulBound{}
+		rows.Scan(
+			&h.TraitType,
+			&h.Value,
+			&h.Count,
+		)
+		soulBound = append(soulBound, h)
+	}
+	return soulBound, nil
+}

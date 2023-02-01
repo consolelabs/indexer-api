@@ -23,3 +23,9 @@ type NftTokenAttributeCount struct {
 	Count int64   `json:"count"`
 	Ratio float64 `json:"ratio"`
 }
+
+type NftTokenAttrSoulBound struct {
+	TraitType string `json:"trait_type"`
+	Value     string `json:"value"`
+	Count     uint64 `json:"count"`
+}

@@ -27,6 +27,8 @@ func loadV1Routes(r *gin.Engine, h *handler.Handler, cfg *config.Config) {
 	v1.GET("/nft/ticker/:collection_address/:token_id", h.GetNftTokenTickers)
 	v1.GET("/nft/metadata/attributes-icon", h.GetNftMetadataAttributesIcon)
 
+	v1.GET("/nft/:collection_address/soulbound", h.GetNftSoulBound)
+
 	// Wallet
 	v1.GET(":wallet_address/nft", h.GetNftTokensByWalletAddress)
 }

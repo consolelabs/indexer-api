@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/consolelabs/indexer-api/pkg/handler"
 	"github.com/gin-gonic/gin"
 	"github.com/google/go-cmp/cmp"
 	"github.com/google/go-cmp/cmp/cmpopts"
-
 	"github.com/stretchr/testify/require"
+
+	"github.com/consolelabs/indexer-api/pkg/handler"
 )
 
 func Test_loadV1Routes(t *testing.T) {
@@ -69,6 +69,10 @@ func Test_loadV1Routes(t *testing.T) {
 		"/api/v1/:wallet_address/nft": {
 			Method:  "GET",
 			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetNftTokensByWalletAddress-fm",
+		},
+		"/api/v1/nft/:collection_address/soulbound": {
+			Method:  "GET",
+			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetNftSoulBound-fm",
 		},
 	}
 	h, err := handler.New(nil, nil, nil)
