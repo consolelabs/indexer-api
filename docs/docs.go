@@ -572,7 +572,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/nft/{collection_address}/{token_id}/activity": {
+        "/nft/{collection_address}/{token_id}/collection": {
             "get": {
                 "description": "Get nft token activities",
                 "consumes": [

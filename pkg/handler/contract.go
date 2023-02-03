@@ -133,3 +133,52 @@ func (h *Handler) GetContractStatusHandler(c *gin.Context) {
 		IsSynced:         contract.LastUpdatedBlock > 0,
 	}, nil, nil, nil))
 }
+
+func (h *Handler) AddErc721ContractScript(address, name, symbol string, chainId int64, priorityFlag bool) {
+	// Validate correct format of contract address, not allow lowercase, currently set chainId = 0 for solana
+	// TODO(trkhoi): convert to correct format for solana
+	var checksumAddress string
+	var err error
+	if chainId != 9999 && chainId != 9997 {
+		checksumAddress, err = utils.StringToHashAddress(address)
+		if err != nil {
+			h.logger.Fields(logger.Fields{
+				"address": address,
+				"chainId": chainId,
+			}).Error(err, "Address does not have correct format")
+			return
+		}
+		if chainId != 0 {
+			address = checksumAddress
+		}
+	}
+
+	err = h.entities.Contract.AddContract(model.Contract{
+		Address:     address,
+		ChainId:     int64(chainId),
+		GrpcAddress: "indexer-grpc:80",
+		Type:        "ERC721",
+	}, name, symbol)
+	if err != nil {
+		h.logger.Fields(logger.Fields{
+			"address": address,
+			"chainId": chainId,
+		}).Error(err, "Cannot add contract")
+		return
+	}
+
+	syncFullMsg, _ := json.Marshal(message.KafkaMessage{
+		Topic:   "sync_full_collection",
+		Address: address,
+		ChainId: chainId,
+	})
+
+	if priorityFlag {
+		h.logger.Fields(logger.Fields{"address": address, "chainId": chainId}).Info("enqueue with priority")
+		h.queue.PriorityEnqueue(chainId, syncFullMsg)
+	} else {
+		h.logger.Fields(logger.Fields{"address": address, "chainId": chainId}).Info("enqueue with non priority")
+		h.queue.Enqueue(chainId, syncFullMsg)
+	}
+
+}
