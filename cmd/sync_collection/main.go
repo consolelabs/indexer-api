@@ -1,15 +1,23 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/consolelabs/indexer-api/pkg/config"
 	"github.com/consolelabs/indexer-api/pkg/handler"
 	"github.com/consolelabs/indexer-api/pkg/logger"
 	"github.com/consolelabs/indexer-api/pkg/queue"
 	"github.com/consolelabs/indexer-api/pkg/service"
 	"github.com/consolelabs/indexer-api/pkg/store"
+	"io/ioutil"
 	"os"
 	"os/signal"
+	"strconv"
 )
+
+type Data struct {
+	Address []string `json:"address"`
+	ChainId []string `json:"chain_id"`
+}
 
 func main() {
 	cfg := config.LoadConfig(config.DefaultConfigLoaders())
@@ -27,10 +35,27 @@ func main() {
 		logger.L.Fatalf(err, "Can't init handlers")
 	}
 
-	address := []string{"0x5014d8C095A6861eb4962a87bdD38476d475Df0D", "0x51909465D96da5A81917E8c0629EeDeD8A0CbEB1"}
-	chainIds := []int64{66, 66}
-	for i := 0; i < len(address); i++ {
-		h.AddErc721ContractScript(address[i], "", "", chainIds[i], false)
+	fileContent, err := os.Open("data.json")
+
+	if err != nil {
+		logger.L.Fatalf(err, "Can't open file")
+		return
+	}
+
+	defer fileContent.Close()
+
+	byteResult, _ := ioutil.ReadAll(fileContent)
+
+	var payload Data
+	err = json.Unmarshal(byteResult, &payload)
+	if err != nil {
+		log.Fatal(err, "Error during Unmarshal(): ")
+	}
+
+	for i := 0; i < len(payload.Address); i++ {
+		chainId, _ := strconv.Atoi(payload.ChainId[i])
+		address := payload.Address[i]
+		h.AddErc721ContractScript(address, "", "", int64(chainId), false)
 	}
 
 	quit := make(chan os.Signal, 1)
