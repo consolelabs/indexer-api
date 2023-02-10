@@ -80,6 +80,7 @@ type Kafka struct {
 	SolanaConsumerGroup   string
 	PriorityConsumerGroup string
 	SuiConsumerGroup      string
+	OnusConsumerGroup     string
 }
 
 func generateConfigFromViper(v *viper.Viper) *Config {
@@ -106,6 +107,7 @@ func generateConfigFromViper(v *viper.Viper) *Config {
 			SolanaConsumerGroup:   v.GetString("KAFKA_SOL_CONSUMER_GROUP"),
 			PriorityConsumerGroup: v.GetString("KAFKA_PRIORITY_CONSUMER_GROUP"),
 			SuiConsumerGroup:      v.GetString("KAFKA_SUI_CONSUMER_GROUP"),
+			OnusConsumerGroup:     v.GetString("KAFKA_ONUS_CONSUMER_GROUP"),
 		},
 
 		GoogleServiceAccountKey: v.GetString("GOOGLE_SERVICE_ACCOUNT_KEY"),
