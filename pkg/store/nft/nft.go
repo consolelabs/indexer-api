@@ -1053,7 +1053,7 @@ func (pg *store) SummarizeSnapshotCollection(platformId int64) error {
 		FROM
 			nft_listing
 		WHERE
-			platform_id = %v
+			platform_id = %v AND listing_status = 'sold'
 		GROUP BY
 			contract_address,
 			payment_token,
