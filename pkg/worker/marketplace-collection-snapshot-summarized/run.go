@@ -21,7 +21,7 @@ func Run(args ...string) error {
 	// snapshot for platform paintswap and nftkey first
 	// TODO(trkhoi): add other platform snapshot
 	for _, platform := range platforms {
-		if platform.ID == 1 || platform.ID == 2 || platform.ID == 3 {
+		if AllowMarketplacePlatform(int64(platform.ID)) {
 			err := store.Nft.SummarizeSnapshotCollection(int64(platform.ID))
 			if err != nil {
 				l.Fields(logger.Fields{"platformId": platform.ID, "platformName": platform.Name}).Error(err, "failed to summarize snapshot collection")
@@ -33,4 +33,13 @@ func Run(args ...string) error {
 	l.Info("Starting worker")
 	defer l.Info("Finished worker")
 	return nil
+}
+
+func AllowMarketplacePlatform(platformId int64) bool {
+	switch platformId {
+	case 1, 2, 3, 6, 7:
+		return true
+	default:
+		return false
+	}
 }
