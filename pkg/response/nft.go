@@ -108,21 +108,25 @@ type NftCollectionTickersData struct {
 }
 
 type NftTokenTickersData struct {
-	Tickers           TokenTickers `json:"tickers"`
-	Name              string       `json:"name"`
-	TokenId           string       `json:"token_id"`
-	CollectionAddress string       `json:"collection_address"`
-	Description       string       `json:"description"`
-	Image             string       `json:"image"`
-	ImageCDN          string       `json:"image_cdn"`
-	RarityRank        uint64       `json:"rarity_rank"`
-	RarityScore       string       `json:"rarity_score"`
-	RarityTier        string       `json:"rarity_tier"`
-	FloorPrice        *model.Price `json:"floor_price"`
-	LastSalePrice     *model.Price `json:"last_sale_price"`
-	PriceChange1d     string       `json:"price_change_1d"`
-	PriceChange7d     string       `json:"price_change_7d"`
-	PriceChange30d    string       `json:"price_change_30d"`
+	Tickers                   TokenTickers `json:"tickers"`
+	Name                      string       `json:"name"`
+	TokenId                   string       `json:"token_id"`
+	CollectionAddress         string       `json:"collection_address"`
+	Description               string       `json:"description"`
+	Image                     string       `json:"image"`
+	ImageCDN                  string       `json:"image_cdn"`
+	RarityRank                uint64       `json:"rarity_rank"`
+	RarityScore               string       `json:"rarity_score"`
+	RarityTier                string       `json:"rarity_tier"`
+	FloorPrice                *model.Price `json:"floor_price"`
+	LastSalePrice             *model.Price `json:"last_sale_price"`
+	LastSaleAt                time.Time    `json:"last_sale_at"`
+	PriceChange30d            string       `json:"price_change_30d"`
+	PriceChange90d            string       `json:"price_change_90d"`
+	PriceChange365d           string       `json:"price_change_365d"`
+	PriceChangePercentage30d  string       `json:"price_change_percentage_30d"`
+	PriceChangePercentage90d  string       `json:"price_change_percentage_90d"`
+	PriceChangePercentage365d string       `json:"price_change_percentage_365d"`
 }
 
 type NftTokenTickersDataResponse struct {
