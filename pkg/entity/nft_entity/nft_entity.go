@@ -448,7 +448,7 @@ func (e *entity) GetNftTokenTickers(collectionAddress, tokenID string, req reque
 	if err != nil {
 		logger.L.Fields(logger.Fields{
 			"query": query,
-		}).Errorf(err, "[Entity][GetTokenActivities] store.GetNftListing failed")
+		}).Errorf(err, "[Entity][GetNftTokenTickers] store.GetNftListing failed")
 	}
 
 	var (
@@ -464,11 +464,13 @@ func (e *entity) GetNftTokenTickers(collectionAddress, tokenID string, req reque
 
 	// temp calculate like this becasue missing too much data in snapshot
 	// TODO(trkhoi): fix when have enough data
-	priceChange1d, priceChange7d, priceChange30d := e.CalculatePriceChangePercentageToken(collectionAddress, tokenID)
+	change30d, changePercentage30d := e.CalculatePriceChangePercentageToken(collectionAddress, tokenID, 30)
+	change90d, changePercentage90d := e.CalculatePriceChangePercentageToken(collectionAddress, tokenID, 90)
+	change365d, changePercentage365d := e.CalculatePriceChangePercentageToken(collectionAddress, tokenID, 365)
 
 	// last sale
 	lastSaleQ := nft.NftListingQuery{
-		Sort:            "created_time DESC",
+		Sort:            "nl.created_time DESC",
 		ContractAddress: collectionAddress,
 		TokenId:         tokenID,
 		ListingStatus:   "sold",
@@ -478,7 +480,7 @@ func (e *entity) GetNftTokenTickers(collectionAddress, tokenID string, req reque
 	if err != nil {
 		logger.L.Fields(logger.Fields{
 			"lastSaleQ": lastSaleQ,
-		}).Errorf(err, "[Entity][GetNftCollectionTickers] store.GetNftListing failed")
+		}).Errorf(err, "[Entity][GetNftTokenTickers] store.GetNftListing failed")
 		return nil, err
 	}
 
@@ -498,55 +500,59 @@ func (e *entity) GetNftTokenTickers(collectionAddress, tokenID string, req reque
 		RarityScore:       token.RarityScore,
 		RarityTier:        token.RarityTier,
 
-		FloorPrice:     e.CalculateNftTokenFloorPrice(collectionAddress, tokenID),
-		PriceChange1d:  priceChange1d,
-		PriceChange7d:  priceChange7d,
-		PriceChange30d: priceChange30d,
+		FloorPrice: e.CalculateNftTokenFloorPrice(collectionAddress, tokenID),
+		// PriceChange1d:  priceChange1d,
+		// PriceChange7d:  priceChange7d,
+		// PriceChange30d: priceChange30d,
+		PriceChange30d:            change30d,
+		PriceChange90d:            change90d,
+		PriceChange365d:           change365d,
+		PriceChangePercentage30d:  changePercentage30d,
+		PriceChangePercentage90d:  changePercentage90d,
+		PriceChangePercentage365d: changePercentage365d,
 	}
 	if len(sales) > 0 {
 		res.LastSalePrice = sales[0].SoldPriceObj
+		res.LastSaleAt = sales[0].CreatedTime
 	}
 	return res, nil
 }
 
-func (e *entity) CalculatePriceChangePercentageToken(collectionAddress, tokenID string) (string, string, string) {
-	priceChange1d, priceChange7d, priceChange30d := "0", "0", "0"
+func (e *entity) CalculatePriceChangePercentageToken(collectionAddress, tokenID string, dayRange int) (string, string) {
+	// priceChange1d, priceChange7d, priceChange30d := "0", "0", "0"
+	var change, changePercentage string
 
+	to := time.Now()
 	query := nft.NftListingQuery{
 		ContractAddress: collectionAddress,
 		TokenId:         tokenID,
 		ListingStatus:   "sold",
-		From:            time.Now().AddDate(0, 0, -30).UnixMilli(),
-		To:              time.Now().UnixMilli(),
-		Sort:            "created_time DESC",
+		From:            to.AddDate(0, 0, -dayRange).UnixMilli(),
+		To:              to.UnixMilli(),
+		Sort:            "nl.created_time DESC",
 	}
 	listings, _, err := e.store.Nft.GetNftListing(query)
 	if err != nil {
 		logger.L.Fields(logger.Fields{
 			"query": query,
 		}).Error(err, "[Entity.CalculatePriceChangePercentageToken][store.Nft.GetNftListing] cannot get listing in 30 days")
-		return "", "", ""
+		return change, changePercentage
 	}
 
-	if len(listings) > 2 {
-		decimals := int(listings[len(listings)-1].SoldPriceObj.Token.Decimals)
-		priceNow := utils.StringWeiToEther(listings[len(listings)-1].SoldPriceObj.Amount, decimals)
-		price1d := utils.StringWeiToEther(listings[len(listings)-2].SoldPriceObj.Amount, decimals)
-		price30d := utils.StringWeiToEther(listings[0].SoldPriceObj.Amount, decimals)
-
-		priceChange1dBigFloat := new(big.Float)
-		priceChange1dBigFloat = priceChange1dBigFloat.Sub(priceNow, price1d)
-		priceChange1dBigFloat = new(big.Float).Quo(priceChange1dBigFloat, price1d)
-		priceChange1dBigFloat = priceChange1dBigFloat.Mul(priceChange1dBigFloat, big.NewFloat(100))
-		priceChange1d = fmt.Sprintf("%.2f", priceChange1dBigFloat.Abs(priceChange1dBigFloat))
-
-		priceChange30dBigFloat := new(big.Float)
-		priceChange30dBigFloat = priceChange30dBigFloat.Sub(priceNow, price30d)
-		priceChange30dBigFloat = new(big.Float).Quo(priceChange30dBigFloat, price30d)
-		priceChange30dBigFloat = priceChange30dBigFloat.Mul(priceChange30dBigFloat, big.NewFloat(100))
-		priceChange30d = fmt.Sprintf("%.2f", priceChange30dBigFloat.Abs(priceChange30dBigFloat))
+	if len(listings) == 0 {
+		return change, changePercentage
 	}
-	return priceChange1d, priceChange7d, priceChange30d
+
+	decimals := int(listings[0].SoldPriceObj.Token.Decimals)
+	latestPriceInRange := utils.StringWeiToEther(listings[0].SoldPriceObj.Amount, decimals)
+	oldestPriceInRange := utils.StringWeiToEther(listings[len(listings)-1].SoldPriceObj.Amount, decimals)
+	pChange := new(big.Float).Sub(latestPriceInRange, oldestPriceInRange)
+	if oldestPriceInRange.Cmp(big.NewFloat(0)) != 0 {
+		pChangePercentage := new(big.Float).Quo(pChange, oldestPriceInRange)
+		change = pChange.String()
+		changePercentage = new(big.Float).Mul(pChangePercentage, big.NewFloat(100)).String() + "%"
+	}
+	return change, changePercentage
 }
 
 func (e *entity) CalculateNftTokenFloorPrice(collectionAddress, tokenID string) (price *model.Price) {
