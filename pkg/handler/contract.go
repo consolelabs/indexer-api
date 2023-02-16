@@ -34,9 +34,9 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 
 	// Validate correct format of contract address, not allow lowercase, currently set chainId = 0 for solana
 	// TODO(trkhoi): convert to correct format for solana
-	var checksumAddress string
+	checksumAddress := body.Address
 	var err error
-	if body.ChainId != 9999 && body.ChainId != 9997 {
+	if body.ChainId != 9999 && body.ChainId != 9997 && body.ChainId != 999 {
 		checksumAddress, err = utils.StringToHashAddress(body.Address)
 		if err != nil {
 			h.logger.Fields(logger.Fields{
@@ -46,20 +46,17 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 			c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, errors.New("Address does not have correct format"), nil))
 			return
 		}
-		if body.ChainId != 0 {
-			body.Address = checksumAddress
-		}
 	}
 
 	err = h.entities.Contract.AddContract(model.Contract{
-		Address:     body.Address,
+		Address:     checksumAddress,
 		ChainId:     int64(body.ChainId),
 		GrpcAddress: "indexer-grpc:80",
 		Type:        "ERC721",
 	}, body.Name, body.Symbol)
 	if err != nil {
 		h.logger.Fields(logger.Fields{
-			"address": body.Address,
+			"address": checksumAddress,
 			"chainId": body.ChainId,
 		}).Error(err, "Cannot add contract")
 		code := http.StatusInternalServerError
@@ -72,7 +69,7 @@ func (h *Handler) AddErc721ContractHandler(c *gin.Context) {
 
 	syncFullMsg, _ := json.Marshal(message.KafkaMessage{
 		Topic:   "sync_full_collection",
-		Address: body.Address,
+		Address: checksumAddress,
 		ChainId: body.ChainId,
 	})
 
