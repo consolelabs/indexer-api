@@ -172,7 +172,7 @@ func (q *Queue) ConsumerGroup(chainId int64) string {
 		return q.cfg.Kafka.EvmConsumerGroup
 	case 10:
 		return q.cfg.Kafka.EvmConsumerGroup
-	case 0:
+	case 999:
 		return q.cfg.Kafka.SolanaConsumerGroup
 	case 9999:
 		return q.cfg.Kafka.AptosConsumerGroup
