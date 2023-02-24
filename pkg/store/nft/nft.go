@@ -123,6 +123,24 @@ func (s *store) GetAttributesByCollectionAddress(collectionAddress string) ([]mo
 	return tokenAttributes, nil
 }
 
+func (s *store) GetCollectionByNameAndChainID(collectionName string, chainId int) (*model.NftCollection, error) {
+	var collection *model.NftCollection
+	err := s.db.Table("nft_collection").Where("name = ? and chain_id = ?", collectionName, chainId).Find(&collection).Error
+	if err != nil {
+		return nil, err
+	}
+	return collection, nil
+}
+
+func (s *store) UpsertCollection(collection *model.NftCollection) error {
+	tx := s.db.Begin()
+	if err := tx.Table("nft_collection").Where("name = ? AND chain_id = ?", collection.Name, collection.ChainId).Save(&collection).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
 func (s *store) UpdateOwnerByCollectionAddressTokenId(collectionAddress, tokenId string, ownerAddress string) error {
 	return s.db.Table("nft_owner").Where("collection_address = ? AND token_id = ?", collectionAddress, tokenId).Updates(map[string]interface{}{"owner_address": ownerAddress, "last_updated_time": time.Now()}).Error
 }

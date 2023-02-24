@@ -29,6 +29,8 @@ type INft interface {
 	GetCollections(query NftCollectionQuery) (data []model.NftCollection, total int64, err error)
 	SaveNftCollection(nftCollection *model.NftCollection) error
 	GetCollectionsByWalletAddress(query WalletCollectionQuery) (data []model.NftCollection, total int64, err error)
+	GetCollectionByNameAndChainID(collectionName string, chainId int) (*model.NftCollection, error)
+	UpsertCollection(collection *model.NftCollection) error
 
 	// Attribute
 	GetAttributesByCollectionAddress(collectionAddress string) ([]model.NftTokenAttribute, error)
