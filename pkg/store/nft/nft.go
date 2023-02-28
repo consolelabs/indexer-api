@@ -1108,3 +1108,7 @@ func (pg *store) GetNftTokenAttrWithSoulBound(collectionAddress string) ([]model
 	}
 	return soulBound, nil
 }
+
+func (pg *store) GetSolanaMappingAddress(solscanId string) (model *model.SolanaMappingAddress, err error) {
+	return model, pg.db.Table("solana_mapping_address").Where("solscan_id = ?", solscanId).First(&model).Error
+}
