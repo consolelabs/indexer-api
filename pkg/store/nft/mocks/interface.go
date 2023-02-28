@@ -279,6 +279,21 @@ func (mr *MockINftMockRecorder) GetPlatformsByCollectionAddress(collectionAddres
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPlatformsByCollectionAddress", reflect.TypeOf((*MockINft)(nil).GetPlatformsByCollectionAddress), collectionAddress)
 }
 
+// GetSolanaMappingAddress mocks base method.
+func (m *MockINft) GetSolanaMappingAddress(solscanId string) (*model.SolanaMappingAddress, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSolanaMappingAddress", solscanId)
+	ret0, _ := ret[0].(*model.SolanaMappingAddress)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSolanaMappingAddress indicates an expected call of GetSolanaMappingAddress.
+func (mr *MockINftMockRecorder) GetSolanaMappingAddress(solscanId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSolanaMappingAddress", reflect.TypeOf((*MockINft)(nil).GetSolanaMappingAddress), solscanId)
+}
+
 // GetTokensByWalletAddress mocks base method.
 func (m *MockINft) GetTokensByWalletAddress(query nft.WalletTokenQuery) ([]model.NftToken, int64, error) {
 	m.ctrl.T.Helper()
