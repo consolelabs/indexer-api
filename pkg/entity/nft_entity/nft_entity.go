@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/big"
+	"strings"
 	"time"
 
 	"gorm.io/gorm"
@@ -119,7 +120,19 @@ func (e *entity) GetNftCollectionTickers(collectionAddress string, req request.G
 	if len(collections) == 0 {
 		return nil, gorm.ErrRecordNotFound
 	}
+	// handle case address solscan
+	if strings.Contains(collectionAddress, "solscan-") {
+		solanaMapping, err := e.store.Nft.GetSolanaMappingAddress(collectionAddress)
+		if err != nil {
+			logger.L.Fields(logger.Fields{
+				"address": collectionAddress,
+			}).Error(err, "[Entity][GetNftCollectionTickers] store.GetSolanaMappingAddress failed")
+			return nil, err
+		}
+		collectionAddress = solanaMapping.OnchainAddress
+	}
 	collection := collections[0]
+	collection.Address = collectionAddress
 	collection.Stats.Standardize()
 
 	tickerQuery := nft.NftTickerQuery{
