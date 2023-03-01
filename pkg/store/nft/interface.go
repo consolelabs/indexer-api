@@ -61,4 +61,7 @@ type INft interface {
 
 	// ViewNftCollectionAttributes
 	RefreshViewNFTCollectionAttributes() error
+
+	SaveSolanaMapAddress(solanaMap *model.SolanaMappingAddress) error
+	GetSolanaMapAddress(id string) (*model.SolanaMappingAddress, error)
 }

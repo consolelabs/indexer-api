@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type Element struct {
 	Data                Data            `json:"data"`
 	IsMutable           bool            `json:"is_mutable"`
@@ -65,4 +67,49 @@ type Creator struct {
 type Attribute struct {
 	TraitType string `json:"trait_type"`
 	Value     string `json:"value"`
+}
+
+type NftCollectionResponse struct {
+	Success bool `json:"success"`
+	Data    struct {
+		Success bool                 `json:"success"`
+		Data    NftCollectionSolScan `json:"data"`
+	} `json:"data"`
+}
+
+type NftCollectionSolScan struct {
+	ID                  string  `json:"_id"`
+	CollectionID        string  `json:"collectionId"`
+	Collection          string  `json:"collection"`
+	CollectionOnchainID *string `json:"collectionOnchainId"`
+}
+
+type SolanaMappingAddress struct {
+	ID             string    `json:"id"`
+	OnchainAddress string    `json:"onchain_address"`
+	SolscanId      string    `json:"solscan_id"`
+	Slug           string    `json:"slug"`
+	CreatedAt      time.Time `json:"created_at"`
+	UpdatedAt      time.Time `json:"updated_at"`
+}
+
+type SolscanCollection struct {
+	Data []struct {
+		CollectionID   string `json:"collection_id"`
+		CollectionName string `json:"collection_name"`
+	} `json:"data"`
+}
+
+type NftTokenSolScanResponse struct {
+	Data struct {
+		ListNfts []struct {
+			NftAddress string `json:"nft_address"`
+		} `json:"list_nfts"`
+	} `json:"data"`
+}
+
+type NftTokenMagicedenReponse struct {
+	MintAddress string `json:"mintAddress"`
+	Collection  string `json:"collection"`
+	Name        string `json:"name"`
 }

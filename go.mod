@@ -32,6 +32,7 @@ require (
 	github.com/gammazero/deque v0.2.0 // indirect
 	github.com/gammazero/workerpool v1.1.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/portto/solana-go-sdk v1.23.0 // indirect
 )
 
 require (

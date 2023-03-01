@@ -31,6 +31,8 @@ type Config struct {
 
 	// ipfs server
 	IpfsServer string
+
+	Solscan Solscan
 }
 
 type DBConnection struct {
@@ -81,6 +83,11 @@ type Kafka struct {
 	PriorityConsumerGroup string
 	SuiConsumerGroup      string
 	OnusConsumerGroup     string
+}
+
+type Solscan struct {
+	ProApi string
+	Token  string
 }
 
 func generateConfigFromViper(v *viper.Viper) *Config {
@@ -149,6 +156,11 @@ func generateConfigFromViper(v *viper.Viper) *Config {
 		},
 
 		IpfsServer: v.GetString("IPFS_SERVER"),
+
+		Solscan: Solscan{
+			ProApi: v.GetString("SOLSCAN_PRO_API"),
+			Token:  v.GetString("SOLSCAN_TOKEN"),
+		},
 	}
 }
 
@@ -169,6 +181,8 @@ func LoadConfig(loaders []Loader) *Config {
 	v.SetDefault("ENV", "local")
 	v.SetDefault("FTM_RPC", "https://rpc.fantom.network")
 	v.SetDefault("ALLOWED_ORIGINS", "*")
+	v.SetDefault("SOLSCAN_PRO_API", "https://pro-api.solscan.io/v1.0")
+	v.SetDefault("SOLSCAN_TOKEN", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcmVhdGVkQXQiOjE2NzU3NzcyODYxMjgsImVtYWlsIjoibmdvdHJvbmdraG9pMTEyQGdtYWlsLmNvbSIsImFjdGlvbiI6InRva2VuLWFwaSIsImlhdCI6MTY3NTc3NzI4Nn0.DCT8Fh8j9uWVpnQSMnq0uuzqeBngNLxc4r8a1Aa2C4Q")
 
 	for idx := range loaders {
 		newV, err := loaders[idx].Load(*v)
