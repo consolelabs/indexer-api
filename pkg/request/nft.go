@@ -36,7 +36,7 @@ type GetNftTokensRequest struct {
 type GetNftTokensByAddressRequest struct {
 	*model.Pagination
 	Sort                string   `json:"sort" form:"sort" binding:"omitempty,oneof=collection_address token_id name amount rarity_rank rarity_score rarity_tier -collection_address -token_id -name -amount -rarity_rank -rarity_score -rarity_tier" enums:"collection_address,token_id,name,amount,rarity_rank,rarity_score,rarity_tier,-collection_address,-token_id,-name,-amount,-rarity_rank,-rarity_score,-rarity_tier"` // sort by
-	CollectionAddresses []string `json:"collection_addresses" form:"collection_addresses" binding:"dive,address"`
+	CollectionAddresses []string `json:"collection_addresses" form:"collection_addresses" binding:"dive"`
 	ChainId             *int64   `json:"chain_id" form:"chain_id"` // chain ID
 }
 
