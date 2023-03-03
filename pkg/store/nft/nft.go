@@ -110,6 +110,24 @@ func (s *store) SaveOwner(owner *model.NftOwner) error {
 	return s.db.Create(owner).Error
 }
 
+func (s *store) FindOwner(id string) (*model.NftOwner, error) {
+	var owner *model.NftOwner
+	err := s.db.Table("nft_owner").Where("collection_address = ?", id).Find(&owner).Error
+	if err != nil {
+		return nil, err
+	}
+	return owner, nil
+}
+
+func (s *store) UpsertOwner(owner *model.NftOwner) error {
+	tx := s.db.Begin()
+	if err := tx.Table("nft_owner").Where("collection_address = ? AND token_id = ?", owner.CollectionAddress, owner.TokenId).Save(&owner).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
 func (s *store) DeleteOwnerByCollectionAddressTokenId(collectionAddress, tokenId string) error {
 	return s.db.Table("nft_owner").Where("collection_address = ? AND token_id = ?", collectionAddress, tokenId).Delete(&model.NftOwner{}).Error
 }

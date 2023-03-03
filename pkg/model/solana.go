@@ -66,3 +66,35 @@ type Attribute struct {
 	TraitType string `json:"trait_type"`
 	Value     string `json:"value"`
 }
+
+type NftTokenSolScan struct {
+	Data []NftSolScanData `json:"data"`
+}
+
+type NftHolder struct {
+	Data struct {
+		Holders []struct {
+			WalletAddress    string `json:"wallet_address"`
+			StartHoldingTime string `json:"start_holding_time"`
+		} `json:"holders"`
+	} `json:"data"`
+}
+
+type SolscanCollection struct {
+	Data []struct {
+		CollectionID   string `json:"collection_id"`
+		CollectionName string `json:"collection_name"`
+	} `json:"data"`
+}
+
+type NftFromHolder struct {
+	Data struct {
+		ListNfts []NftSolScanData `json:"list_nfts"`
+	} `json:"data"`
+}
+
+type NftSolScanData struct {
+	NftAddress      string `json:"nft_address"`
+	NftName         string `json:"nft_name"`
+	NftCollectionID string `json:"nft_collection_id"`
+}
