@@ -73,10 +73,9 @@ type NftTokenSolScan struct {
 
 type NftHolder struct {
 	Data struct {
-		Holders []struct {
-			WalletAddress    string `json:"wallet_address"`
-			StartHoldingTime string `json:"start_holding_time"`
-		} `json:"holders"`
+		Data []struct {
+			WalletAddress string `json:"wallet_address"`
+		} `json:"data"`
 	} `json:"data"`
 }
 
@@ -94,7 +93,12 @@ type NftFromHolder struct {
 }
 
 type NftSolScanData struct {
+	TokenAddress    string `json:"token_address"`
 	NftAddress      string `json:"nft_address"`
 	NftName         string `json:"nft_name"`
 	NftCollectionID string `json:"nft_collection_id"`
+}
+
+type NftInfo struct {
+	Data []NftSolScanData `json:"data"`
 }
