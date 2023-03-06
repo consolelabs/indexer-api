@@ -279,6 +279,21 @@ func (mr *MockINftMockRecorder) GetPlatformsByCollectionAddress(collectionAddres
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetPlatformsByCollectionAddress", reflect.TypeOf((*MockINft)(nil).GetPlatformsByCollectionAddress), collectionAddress)
 }
 
+// GetSolScanCollections mocks base method.
+func (m *MockINft) GetSolScanCollections() ([]model.NftCollection, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetSolScanCollections")
+	ret0, _ := ret[0].([]model.NftCollection)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetSolScanCollections indicates an expected call of GetSolScanCollections.
+func (mr *MockINftMockRecorder) GetSolScanCollections() *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetSolScanCollections", reflect.TypeOf((*MockINft)(nil).GetSolScanCollections))
+}
+
 // GetSolanaMappingAddress mocks base method.
 func (m *MockINft) GetSolanaMappingAddress(solscanId string) (*model.SolanaMappingAddress, error) {
 	m.ctrl.T.Helper()
@@ -476,4 +491,18 @@ func (m *MockINft) UpdateOwnerByCollectionAddressTokenId(collectionAddress, toke
 func (mr *MockINftMockRecorder) UpdateOwnerByCollectionAddressTokenId(collectionAddress, tokenId, ownerAddress interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateOwnerByCollectionAddressTokenId", reflect.TypeOf((*MockINft)(nil).UpdateOwnerByCollectionAddressTokenId), collectionAddress, tokenId, ownerAddress)
+}
+
+// UpsertOwner mocks base method.
+func (m *MockINft) UpsertOwner(owner *model.NftOwner) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpsertOwner", owner)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// UpsertOwner indicates an expected call of UpsertOwner.
+func (mr *MockINftMockRecorder) UpsertOwner(owner interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpsertOwner", reflect.TypeOf((*MockINft)(nil).UpsertOwner), owner)
 }

@@ -3,6 +3,7 @@ package service
 import (
 	"database/sql"
 	"fmt"
+
 	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
@@ -13,6 +14,8 @@ import (
 	chaindata "github.com/consolelabs/indexer-api/pkg/service/chain_data"
 	chainexplorer "github.com/consolelabs/indexer-api/pkg/service/chain_explorer"
 	"github.com/consolelabs/indexer-api/pkg/service/gcs"
+	"github.com/consolelabs/indexer-api/pkg/service/solscan"
+	"github.com/consolelabs/indexer-api/pkg/store"
 )
 
 type Service struct {
@@ -20,15 +23,18 @@ type Service struct {
 	ChainExplorer chainexplorer.IService
 	Abi           abi.IService
 	Gcs           gcs.IService
+	SolScan       solscan.IService
 }
 
 func New(cfg *config.Config) *Service {
 	db := connClickhouse(cfg)
+	store := store.New(cfg)
 	return &Service{
 		ChainData:     chaindata.New(db),
 		ChainExplorer: chainexplorer.New(cfg),
 		Abi:           abi.New(cfg),
 		Gcs:           gcs.New(cfg),
+		SolScan:       solscan.New(store, cfg),
 	}
 }
 

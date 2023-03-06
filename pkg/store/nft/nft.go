@@ -110,6 +110,15 @@ func (s *store) SaveOwner(owner *model.NftOwner) error {
 	return s.db.Create(owner).Error
 }
 
+func (s *store) UpsertOwner(owner *model.NftOwner) error {
+	tx := s.db.Begin()
+	if err := tx.Table("nft_owner").Where("collection_address = ? AND token_id = ?", owner.CollectionAddress, owner.TokenId).Save(&owner).Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	return tx.Commit().Error
+}
+
 func (s *store) DeleteOwnerByCollectionAddressTokenId(collectionAddress, tokenId string) error {
 	return s.db.Table("nft_owner").Where("collection_address = ? AND token_id = ?", collectionAddress, tokenId).Delete(&model.NftOwner{}).Error
 }
@@ -129,6 +138,12 @@ func (s *store) UpdateOwnerByCollectionAddressTokenId(collectionAddress, tokenId
 
 func (s *store) SaveTransfer(transfer *model.NftTransfer) error {
 	return s.db.Create(transfer).Error
+}
+
+func (s *store) GetSolScanCollections() ([]model.NftCollection, error) {
+	var data []model.NftCollection
+	err := s.db.Table("nft_collection").Where(`address like 'solscan-%'`).Find(&data).Error
+	return data, err
 }
 
 func (s *store) GetCollections(q NftCollectionQuery) ([]model.NftCollection, int64, error) {

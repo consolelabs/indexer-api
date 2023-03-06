@@ -12,6 +12,7 @@ type INft interface {
 
 	// Owner
 	SaveOwner(owner *model.NftOwner) error
+	UpsertOwner(owner *model.NftOwner) error
 	DeleteOwnerByCollectionAddressTokenId(collectionAddress, tokenId string) error
 	UpdateOwnerByCollectionAddressTokenId(collectionAddress, tokenId string, ownerAddress string) error
 
@@ -27,6 +28,7 @@ type INft interface {
 
 	// NftCollection
 	GetCollections(query NftCollectionQuery) (data []model.NftCollection, total int64, err error)
+	GetSolScanCollections() ([]model.NftCollection, error)
 	SaveNftCollection(nftCollection *model.NftCollection) error
 	GetCollectionsByWalletAddress(query WalletCollectionQuery) (data []model.NftCollection, total int64, err error)
 

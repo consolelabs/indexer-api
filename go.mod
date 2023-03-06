@@ -28,7 +28,11 @@ require (
 	gorm.io/gorm v1.24.1-0.20221019064659-5dd2bb482755
 )
 
-require github.com/inconshreveable/mousetrap v1.0.1 // indirect
+require (
+	github.com/gammazero/deque v0.2.0 // indirect
+	github.com/gammazero/workerpool v1.1.3 // indirect
+	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+)
 
 require (
 	cloud.google.com/go v0.104.0 // indirect
