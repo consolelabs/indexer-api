@@ -29,6 +29,10 @@ require (
 )
 
 require (
+	github.com/Danny-Dasilva/CycleTLS/cycletls v0.0.0-20220620102923-c84d740b4757 // indirect
+	github.com/Danny-Dasilva/fhttp v0.0.0-20220524230104-f801520157d6 // indirect
+	github.com/Danny-Dasilva/utls v0.0.0-20220604023528-30cb107b834e // indirect
+	github.com/dsnet/compress v0.0.1 // indirect
 	github.com/gammazero/deque v0.2.0 // indirect
 	github.com/gammazero/workerpool v1.1.3 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
@@ -66,7 +70,7 @@ require (
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.0 // indirect
 	github.com/googleapis/gax-go/v2 v2.6.0 // indirect
-	github.com/gorilla/websocket v1.4.2 // indirect
+	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/jackc/chunkreader/v2 v2.0.1 // indirect
 	github.com/jackc/pgconn v1.13.0 // indirect

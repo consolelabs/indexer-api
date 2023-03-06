@@ -142,7 +142,7 @@ func (s *store) SaveTransfer(transfer *model.NftTransfer) error {
 
 func (s *store) GetSolScanCollections() ([]model.NftCollection, error) {
 	var data []model.NftCollection
-	err := s.db.Table("nft_collection").Where(`address like 'solscan-%'`).Find(&data).Error
+	err := s.db.Table("nft_collection").Where(`address like 'solscan-%'`).Order("created_time ASC").Limit(50).Find(&data).Error
 	return data, err
 }
 

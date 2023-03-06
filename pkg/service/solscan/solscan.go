@@ -3,6 +3,7 @@ package solscan
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/Danny-Dasilva/CycleTLS/cycletls"
 	"io/ioutil"
 	"net/http"
 	"strings"
@@ -37,7 +38,7 @@ func (s *SolScan) MapSolanaData() error {
 			"worker": "sync holder collection",
 		}).Error(err, "failed query all nft_collection")
 	}
-	wp := workerpool.New(5)
+	wp := workerpool.New(3)
 	for _, ev := range collections {
 		ev := ev
 		wp.Submit(func() {
@@ -70,7 +71,7 @@ func (s *SolScan) mapTokenWithHolder(id string) error {
 		}).Error(err, "failed to get all holder")
 		return err
 	}
-	wp1 := workerpool.New(5)
+	wp1 := workerpool.New(3)
 
 	for _, holder := range holders {
 		holder := holder
@@ -84,7 +85,8 @@ func (s *SolScan) mapTokenWithHolder(id string) error {
 			nftFromHolder, err := s.getAllNftFromHolder(holder)
 			if err != nil {
 				s.logger.Fields(logger.Fields{
-					"holder": holder,
+					"collection": id,
+					"holder":     holder,
 				}).Error(err, "failed to get all nft from holder after retrying")
 			}
 			for _, nft := range nftFromHolder {
@@ -110,21 +112,20 @@ func (s *SolScan) mapTokenWithHolder(id string) error {
 }
 
 func (s *SolScan) getAllHolder(id string) ([]string, error) {
-	offset := 0
-	limit := 50
+	page := 1
 	var holders []string
 	for {
-		nftHolder, err := s.getCollectionHolder(id, offset, limit)
+		nftHolder, err := s.getCollectionHolder(id, page)
 		if err != nil {
 			return holders, err
 		}
-		if len(nftHolder.Data.Data) == 0 {
+		if len(nftHolder.Data.Holders) == 0 {
 			break
 		}
-		for _, v := range nftHolder.Data.Data {
+		for _, v := range nftHolder.Data.Holders {
 			holders = append(holders, v.WalletAddress)
 		}
-		offset += limit
+		page += 1
 	}
 
 	return holders, nil
@@ -151,20 +152,20 @@ func (s *SolScan) getAllNftFromHolder(id string) ([]model.NftSolScanData, error)
 	return nfts, nil
 }
 
-func (s *SolScan) getCollectionHolder(id string, offset, limit int) (*model.NftHolder, error) {
+func (s *SolScan) getCollectionHolder(id string, page int) (*model.NftHolder, error) {
 	retry := 0
 	var err error
 	var nftToken *model.NftHolder
 	for retry < 5 {
-		nftToken, err = s.fetchCollectionHolder(id, offset, limit)
+		nftToken, err = s.fetchCollectionHolder(id, page)
 		s.logger.Fields(logger.Fields{
 			"collectionId": id,
-			"offset":       offset,
+			"page":         page,
 		}).Info("get holder")
 		if err != nil {
 			s.logger.Fields(logger.Fields{
 				"collectionId": id,
-				"offset":       offset,
+				"page":         page,
 				"retry":        retry,
 			}).Error(err, "failed to get nft holder, retrying")
 			retry++
@@ -206,15 +207,15 @@ func (s *SolScan) getNftTokenFromHolder(holderAddress string, offset, limit int)
 	return nftToken, nil
 }
 
-func (s *SolScan) fetchCollectionHolder(id string, offset, limit int) (*model.NftHolder, error) {
+func (s *SolScan) fetchCollectionHolder(id string, page int) (*model.NftHolder, error) {
 	var client = &http.Client{}
-	request, err := http.NewRequest("GET", fmt.Sprintf("%s/public/nft/collection/stats?collectionId=%s&filter=holders&offset=%d&limit=%d", s.config.SolScan.BaseUrl, id, offset, limit), nil)
+	request, err := http.NewRequest("GET", fmt.Sprintf("%s/nft/collection/holders/%s?page=%d", s.config.SolScan.BaseUrl, id, page), nil)
 	if err != nil {
 		return nil, err
 	}
 
 	request.Header.Add("Content-Type", "application/json")
-	//request.Header.Add("token", SolScanToken)
+	request.Header.Add("token", s.config.SolScan.SolScanToken)
 
 	response, err := client.Do(request)
 
@@ -237,30 +238,46 @@ func (s *SolScan) fetchCollectionHolder(id string, offset, limit int) (*model.Nf
 }
 
 func (s *SolScan) fetchNftTokenFromHolder(holderAddress string, offset, limit int) (*model.NftFromHolder, error) {
-	var client = &http.Client{}
-	request, err := http.NewRequest("GET", fmt.Sprintf("%s/wallet/nft/%s?offset=%d&limit=%d", s.config.SolScan.BaseUrl, holderAddress, offset, limit), nil)
-	if err != nil {
-		return nil, err
-	}
+	url := fmt.Sprintf("%s/wallet/nft/%s?offset=%d&limit=%d", s.config.SolScan.BaseUrl, holderAddress, offset, limit)
+	//var client = &http.Client{}
+	//request, err := http.NewRequest("GET", url , nil)
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	//request.Header.Add("Content-Type", "application/json")
+	//
+	//response, err := client.Do(request)
 
-	request.Header.Add("Content-Type", "application/json")
+	//defer response.Body.Close()
+	//resBody, err := ioutil.ReadAll(response.Body)
+	//if err != nil {
+	//	return nil, err
+	//}
 
-	response, err := client.Do(request)
+	response, err := s.requestByCyclets(url)
 
-	if err != nil {
-		return nil, err
-	}
-
-	defer response.Body.Close()
-	resBody, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return nil, err
 	}
 
 	res := &model.NftFromHolder{}
-	err = json.Unmarshal(resBody, res)
+	err = json.Unmarshal([]byte(response.Body), res)
 	if err != nil {
 		return nil, err
 	}
 	return res, nil
+}
+
+func (s *SolScan) requestByCyclets(url string) (*cycletls.Response, error) {
+	client := cycletls.Init()
+	response, err := client.Do(url, cycletls.Options{
+		Body:      "",
+		Ja3:       "771,4865-4867-4866-49195-49199-52393-52392-49196-49200-49162-49161-49171-49172-51-57-47-53-10,0-23-65281-10-11-35-16-5-51-43-13-45-28-21,29-23-24-25-256-257,0",
+		UserAgent: "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0",
+	}, "GET")
+	if err != nil {
+		return nil, err
+	}
+	return &response, nil
 }
