@@ -1070,6 +1070,26 @@ func (pg *store) SummarizeSnapshotCollection(platformId int64) error {
 	return nil
 }
 
+func (pg *store) SummarizeSnapshotHolder() error {
+	query := `
+		INSERT INTO nft_holder_snapshot (collection_address, total_holder, created_time)
+		SELECT
+			collection_address,
+			count(collection_address) AS total_holder,
+			date(created_time) AS created_time
+		FROM
+			nft_owner
+		GROUP BY
+			collection_address,
+			date(created_time)
+		ORDER BY
+			date(created_time)
+	`
+	pg.db.Exec(fmt.Sprintf(query))
+
+	return nil
+}
+
 func (pg *store) GetNftTokenAttrWithSoulBound(collectionAddress string) ([]model.NftTokenAttrSoulBound, error) {
 	rows, err := pg.db.Raw(
 		`

@@ -44,6 +44,9 @@ type INft interface {
 	GetNftMarketplaceCollectionSnapshots(query NftTickerQuery) ([]model.NftMarketplaceCollectionSnapshot, error)
 	SummarizeSnapshotCollection(platformId int64) error
 
+	// holder snapshot
+	SummarizeSnapshotHolder() error
+
 	//Metadata
 	GetNftMetadataAttributesIcon(query NftAttributeIconQuery) (icons []model.NftMetadataAttributesIcon, total int64, err error)
 
