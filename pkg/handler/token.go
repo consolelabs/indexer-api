@@ -1,11 +1,13 @@
 package handler
 
 import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+
 	"github.com/consolelabs/indexer-api/pkg/logger"
 	"github.com/consolelabs/indexer-api/pkg/request"
 	"github.com/consolelabs/indexer-api/pkg/response"
-	"github.com/gin-gonic/gin"
-	"net/http"
 )
 
 func (h *Handler) GetConvertTokenPrice(c *gin.Context) {
@@ -15,12 +17,12 @@ func (h *Handler) GetConvertTokenPrice(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, body))
 		return
 	}
-	convertTokenPrice, err := h.entities.Token.GetConvertTokenPrice(body.Amount, body.FromToken, body.ToToken)
+	convertTokenPrice, err := h.entities.Token.GetConvertTokenPrice(body.Amount, body.From, body.To)
 	if err != nil {
 		h.logger.Fields(logger.Fields{
 			"amount": body.Amount,
-			"from":   body.FromToken,
-			"To":     body.ToToken,
+			"from":   body.From,
+			"To":     body.To,
 		}).Error(err, "[GetConvertTokenPrice] get convert token price")
 		c.JSON(http.StatusInternalServerError, response.CreateResponse[any](nil, nil, err, nil))
 		return

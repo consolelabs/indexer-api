@@ -1,7 +1,7 @@
 package request
 
 type ConvertTokenPrice struct {
-	Amount    string `json:"amount"`
-	FromToken string `json:"from_token"`
-	ToToken   string `json:"to_token"`
+	Amount string `json:"amount"`
+	From   string `json:"from"`
+	To     string `json:"to"`
 }
