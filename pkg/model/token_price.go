@@ -1,7 +1,7 @@
 package model
 
 type TokenPriceDetail struct {
-	TokenId  int64  `json:"token_id"`
+	TokenId  int    `json:"token_id"`
 	Price    string `json:"price"`
 	Symbol   string `json:"symbol"`
 	Name     string `json:"name"`
