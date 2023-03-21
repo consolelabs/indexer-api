@@ -32,11 +32,11 @@ func (t *tokenEntity) GetConvertTokenPrice(amount, from, to string) (*model.Conv
 	if err != nil {
 		return nil, err
 	}
-	priceFromToken, err := strconv.ParseFloat(fromTokenPrice.Price, 64)
+	priceFromToken, err := strconv.Atoi(fromTokenPrice.Price)
 	if err != nil {
 		return nil, err
 	}
-	priceToToken, err := strconv.ParseFloat(toTokenPrice.Price, 64)
+	priceToToken, err := strconv.Atoi(toTokenPrice.Price)
 	if err != nil {
 		return nil, err
 	}
@@ -44,7 +44,7 @@ func (t *tokenEntity) GetConvertTokenPrice(amount, from, to string) (*model.Conv
 	if err != nil {
 		return nil, err
 	}
-	amountToToken := (amountFromToken * priceFromToken) / priceToToken
+	amountToToken := (amountFromToken * float64(priceFromToken/fromTokenPrice.Decimals)) / float64(priceToToken/toTokenPrice.Decimals)
 
 	// fetch data
 	amountTo := fmt.Sprintf("%f", amountToToken)
