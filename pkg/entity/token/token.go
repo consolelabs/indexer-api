@@ -66,9 +66,7 @@ func (t *tokenEntity) GetConvertTokenPrice(amount, from, to string) (*model.Conv
 	}
 
 	divisionFrom := new(big.Int).Div(priceFromToken, decimalFromToken)
-	fmt.Println(divisionFrom.Int64())
 	divisionTo := new(big.Int).Div(priceToToken, decimalToToken)
-	fmt.Println(divisionTo.Int64())
 
 	amountToToken := amountFromToken * float64(divisionFrom.Int64()) / float64(divisionTo.Int64())
 
