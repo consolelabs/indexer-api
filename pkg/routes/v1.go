@@ -31,4 +31,7 @@ func loadV1Routes(r *gin.Engine, h *handler.Handler, cfg *config.Config) {
 
 	// Wallet
 	v1.GET(":wallet_address/nft", h.GetNftTokensByWalletAddress)
+
+	// token
+	v1.POST("/token/convert-price", h.GetConvertTokenPrice)
 }
