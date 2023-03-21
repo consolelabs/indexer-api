@@ -5,7 +5,7 @@ type TokenPriceDetail struct {
 	Price    string `json:"price"`
 	Symbol   string `json:"symbol"`
 	Name     string `json:"name"`
-	Decimals int64  `json:"decimals"`
+	Decimals int    `json:"decimals"`
 }
 
 type ConvertTokenPrice struct {
