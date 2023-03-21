@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/consolelabs/indexer-api/pkg/store/token"
+
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/schema"
@@ -20,6 +22,7 @@ type Store struct {
 	Contract contractstore.IContract
 	Nft      nftstore.INft
 	Table    table.Table
+	Token    token.IToken
 }
 
 func New(cfg *config.Config) *Store {
@@ -29,6 +32,7 @@ func New(cfg *config.Config) *Store {
 		Contract: contractstore.New(db),
 		Nft:      nftstore.New(db),
 		Table:    *table.New(db),
+		Token:    token.New(db),
 	}
 }
 
