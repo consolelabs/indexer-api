@@ -74,6 +74,10 @@ func Test_loadV1Routes(t *testing.T) {
 			Method:  "GET",
 			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetNftSoulBound-fm",
 		},
+		"/api/v1/token/convert-price": {
+			Method:  "POST",
+			Handler: "github.com/consolelabs/indexer-api/pkg/handler.(*Handler).GetConvertTokenPrice-fm",
+		},
 	}
 	h, err := handler.New(nil, nil, nil)
 	require.NoError(t, err)
