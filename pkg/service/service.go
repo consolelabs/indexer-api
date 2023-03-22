@@ -12,6 +12,7 @@ import (
 	abi "github.com/consolelabs/indexer-api/pkg/service/abi"
 	chaindata "github.com/consolelabs/indexer-api/pkg/service/chain_data"
 	chainexplorer "github.com/consolelabs/indexer-api/pkg/service/chain_explorer"
+	"github.com/consolelabs/indexer-api/pkg/service/coingecko"
 	"github.com/consolelabs/indexer-api/pkg/service/gcs"
 )
 
@@ -20,6 +21,7 @@ type Service struct {
 	ChainExplorer chainexplorer.IService
 	Abi           abi.IService
 	Gcs           gcs.IService
+	Coingecko     coingecko.IService
 }
 
 func New(cfg *config.Config) *Service {
@@ -29,6 +31,7 @@ func New(cfg *config.Config) *Service {
 		ChainExplorer: chainexplorer.New(cfg),
 		Abi:           abi.New(cfg),
 		Gcs:           gcs.New(cfg),
+		Coingecko:     coingecko.New(cfg),
 	}
 }
 

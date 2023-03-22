@@ -31,6 +31,9 @@ type Config struct {
 
 	// ipfs server
 	IpfsServer string
+
+	// coingecko
+	CoingeckoApiKey string
 }
 
 type DBConnection struct {
@@ -148,7 +151,8 @@ func generateConfigFromViper(v *viper.Viper) *Config {
 			Quixotic: v.GetString("QUIXOTIC_API_KEY"),
 		},
 
-		IpfsServer: v.GetString("IPFS_SERVER"),
+		IpfsServer:      v.GetString("IPFS_SERVER"),
+		CoingeckoApiKey: v.GetString("COINGECKO_API_KEY"),
 	}
 }
 
