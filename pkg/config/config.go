@@ -34,6 +34,8 @@ type Config struct {
 
 	// coingecko
 	CoingeckoApiKey string
+
+	Birdeye Birdeye
 }
 
 type DBConnection struct {
@@ -49,6 +51,11 @@ type DBConnection struct {
 type ApiServer struct {
 	Port           string
 	AllowedOrigins string
+}
+
+type Birdeye struct {
+	Api string
+	Key string
 }
 
 type GrpcServer struct {
@@ -151,7 +158,13 @@ func generateConfigFromViper(v *viper.Viper) *Config {
 			Quixotic: v.GetString("QUIXOTIC_API_KEY"),
 		},
 
-		IpfsServer:      v.GetString("IPFS_SERVER"),
+		IpfsServer: v.GetString("IPFS_SERVER"),
+
+		Birdeye: Birdeye{
+			Api: v.GetString("BIRDEYE_API"),
+			Key: v.GetString("BIRDEYE_KEY"),
+		},
+
 		CoingeckoApiKey: v.GetString("COINGECKO_API_KEY"),
 	}
 }
@@ -173,6 +186,7 @@ func LoadConfig(loaders []Loader) *Config {
 	v.SetDefault("ENV", "local")
 	v.SetDefault("FTM_RPC", "https://rpc.fantom.network")
 	v.SetDefault("ALLOWED_ORIGINS", "*")
+	v.SetDefault("BIRDEYE_API", "https://public-api.birdeye.so")
 
 	for idx := range loaders {
 		newV, err := loaders[idx].Load(*v)
