@@ -1,9 +1,8 @@
 package token
 
 import (
-	"gorm.io/gorm"
-
 	"github.com/consolelabs/indexer-api/pkg/model"
+	"gorm.io/gorm"
 )
 
 type store struct {
@@ -30,4 +29,16 @@ func (s *store) GetLatestSnapshot(id int64, source string) (snapshot []model.Tok
 
 func (s *store) Save(model *model.TokenHistoryPriceSnapshot) error {
 	return s.db.Table("token_history_price_snapshot").Create(&model).Error
+}
+
+func (s *store) Upsert(t *model.TokenHistoryPriceSnapshot) error {
+	var snapshot *model.TokenHistoryPriceSnapshot
+	err := s.db.Table("token_history_price_snapshot").Where("token_id = ? and source = ? and time = ?", t.TokenId, t.Source, t.Time).Find(&snapshot).Error
+	if err != nil {
+		return err
+	}
+	if snapshot.TokenId == t.TokenId {
+		return nil
+	}
+	return s.db.Table("token_history_price_snapshot").Create(&t).Error
 }

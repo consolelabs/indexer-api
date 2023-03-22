@@ -9,4 +9,5 @@ type IToken interface {
 	GetListToken() (tokens []model.Token, err error)
 	GetLatestSnapshot(id int64, source string) (snapshot []model.TokenHistoryPriceSnapshot, err error)
 	Save(model *model.TokenHistoryPriceSnapshot) error
+	Upsert(model *model.TokenHistoryPriceSnapshot) error
 }

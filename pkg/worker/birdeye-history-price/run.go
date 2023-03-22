@@ -1,8 +1,8 @@
 package birdeye_history_price
 
 import (
-	"fmt"
 	"math"
+	"math/big"
 	"time"
 
 	"github.com/consolelabs/indexer-api/pkg/config"
@@ -65,18 +65,22 @@ func executeIndexingBirdeyeHistoryPrice(store *store.Store, service *service.Ser
 			}
 			if history != nil {
 				if history.Success == true && len(history.Data.Items) > 0 {
-					price := math.Floor(history.Data.Items[0].Value * math.Pow(10, float64(token.Decimals)))
-					stringPrice := fmt.Sprintf("%d", int64(price))
+					historyPrice := new(big.Float).SetFloat64(history.Data.Items[0].Value)
+					decimalToken := new(big.Float).SetFloat64(math.Pow(10, float64(token.Decimals)))
+					price := new(big.Float).Mul(historyPrice, decimalToken)
+					stringPrice := price.Text('f', 0)
 					dateTimestamp, _ := time.Parse("02-01-2006", date)
 
 					snapshot := model.TokenHistoryPriceSnapshot{
-						TokenId: token.Id,
-						Price:   stringPrice,
-						Source:  "birdeye",
-						Time:    dateTimestamp,
+						TokenId:   token.Id,
+						Price:     stringPrice,
+						Source:    "birdeye",
+						Time:      dateTimestamp,
+						CreatedAt: time.Now(),
+						UpdatedAt: time.Now(),
 					}
 
-					err = store.Token.Save(&snapshot)
+					err = store.Token.Upsert(&snapshot)
 					if err != nil {
 						logger.L.Fields(logger.Fields{"token": token.Symbol, "date": date, "source": "birdeye"}).Error(err, "[Save] Fail to save snapshot to database")
 						return
