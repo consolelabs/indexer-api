@@ -3,6 +3,8 @@ package service
 import (
 	"database/sql"
 	"fmt"
+	"github.com/consolelabs/indexer-api/pkg/service/birdeye"
+	"github.com/consolelabs/indexer-api/pkg/store"
 	"time"
 
 	"github.com/ClickHouse/clickhouse-go/v2"
@@ -12,6 +14,7 @@ import (
 	abi "github.com/consolelabs/indexer-api/pkg/service/abi"
 	chaindata "github.com/consolelabs/indexer-api/pkg/service/chain_data"
 	chainexplorer "github.com/consolelabs/indexer-api/pkg/service/chain_explorer"
+	"github.com/consolelabs/indexer-api/pkg/service/coingecko"
 	"github.com/consolelabs/indexer-api/pkg/service/gcs"
 )
 
@@ -20,15 +23,20 @@ type Service struct {
 	ChainExplorer chainexplorer.IService
 	Abi           abi.IService
 	Gcs           gcs.IService
+	Birdeye       birdeye.IService
+	Coingecko     coingecko.IService
 }
 
 func New(cfg *config.Config) *Service {
 	db := connClickhouse(cfg)
+	store := store.New(cfg)
 	return &Service{
 		ChainData:     chaindata.New(db),
 		ChainExplorer: chainexplorer.New(cfg),
 		Abi:           abi.New(cfg),
 		Gcs:           gcs.New(cfg),
+		Birdeye:       birdeye.New(store, cfg),
+		Coingecko:     coingecko.New(cfg),
 	}
 }
 
