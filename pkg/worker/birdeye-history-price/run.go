@@ -3,6 +3,7 @@ package birdeye_history_price
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"time"
 
 	"github.com/consolelabs/indexer-api/pkg/config"
@@ -65,8 +66,8 @@ func executeIndexingBirdeyeHistoryPrice(store *store.Store, service *service.Ser
 			}
 			if history != nil {
 				if history.Success == true && len(history.Data.Items) > 0 {
-					price := math.Floor(history.Data.Items[0].Value * math.Pow(10, float64(token.Decimals)))
-					stringPrice := fmt.Sprintf("%d", int64(price))
+					price := big.NewFloat(math.Floor(history.Data.Items[0].Value * math.Pow(10, float64(token.Decimals))))
+					stringPrice := fmt.Sprintf("%.0f", price)
 					dateTimestamp, _ := time.Parse("02-01-2006", date)
 
 					snapshot := model.TokenHistoryPriceSnapshot{

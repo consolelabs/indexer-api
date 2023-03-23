@@ -3,6 +3,7 @@ package coingeckohistoryprice
 import (
 	"fmt"
 	"math"
+	"math/big"
 	"sync"
 	"time"
 
@@ -69,8 +70,9 @@ func executeIndexingCoingeckoHistoryPrice(wg *sync.WaitGroup, cfg *config.Config
 			return
 		}
 
-		price := math.Floor(history.MarketData.CurrentPrice.Usd * math.Pow(10, float64(token.Decimals)))
-		stringPrice := fmt.Sprintf("%d", int64(price))
+		price := big.NewFloat(math.Floor(history.MarketData.CurrentPrice.Usd * math.Pow(10, float64(token.Decimals))))
+
+		stringPrice := fmt.Sprintf("%.0f", price)
 		dateTimestamp, _ := time.Parse("02-01-2006", date)
 
 		snapshot := model.TokenHistoryPriceSnapshot{
