@@ -16,8 +16,15 @@ func New(db *gorm.DB) IToken {
 	}
 }
 
-func (s *store) GetTokenPriceDetail(symbol string) (tokenPriceDetail *model.TokenPriceDetail, err error) {
-	return tokenPriceDetail, s.db.Table("token_price").Select("token_price.price, token.decimals, token.name").Joins("LEFT JOIN token ON token_price.token_id = token.id").Where("token.symbol = ?", symbol).First(&tokenPriceDetail).Error
+func (s *store) GetTokenPriceDetail(tokenId int64, time string) (tokenPriceDetail *model.TokenPrice, err error) {
+	return tokenPriceDetail, s.db.Table("token_price").Where("token_id = ? and time >= ?", tokenId, time).First(&tokenPriceDetail).Error
+}
+
+func (s *store) GetTokenBySymbol(symbol string) (token *model.Token, err error) {
+	return token, s.db.Table("token").Where("symbol = ?", symbol).First(&token).Error
+}
+func (s *store) CreateTokenPrice(model *model.TokenPrice) error {
+	return s.db.Table("token_price").Create(&model).Error
 }
 
 func (s *store) GetListToken() (tokens []model.Token, err error) {

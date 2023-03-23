@@ -1,15 +1,17 @@
 package token
 
 import (
-	"errors"
 	"fmt"
-	"math"
-	"math/big"
-	"strconv"
+	"time"
 
+	"gorm.io/gorm"
+
+	"github.com/consolelabs/indexer-api/pkg/logger"
 	"github.com/consolelabs/indexer-api/pkg/model"
+	"github.com/consolelabs/indexer-api/pkg/request"
 	"github.com/consolelabs/indexer-api/pkg/service"
 	"github.com/consolelabs/indexer-api/pkg/store"
+	"github.com/consolelabs/indexer-api/pkg/utils"
 )
 
 type tokenEntity struct {
@@ -24,61 +26,93 @@ func New(store *store.Store, service *service.Service) ITokenEntity {
 	}
 }
 
-func (t *tokenEntity) GetConvertTokenPrice(amount, from, to string) (*model.ConvertTokenPrice, error) {
+func (t *tokenEntity) GetConvertTokenPrice(req request.ConvertTokenPrice) (*model.ConvertTokenPrice, error) {
+	fromToken, err := t.store.Token.GetTokenBySymbol(req.From)
+	if err != nil {
+		logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token")
+		return nil, err
+	}
+	toToken, err := t.store.Token.GetTokenBySymbol(req.To)
+	if err != nil {
+		logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to get to token")
+		return nil, err
+	}
+
+	fromTokenPrice, toTokenPrice, err := t.GetAndCacheTokenPrice(req, fromToken, toToken)
+	if err != nil {
+		logger.L.Fields(logger.Fields{"fromToken": req.From, "toToken": req.To}).Error(err, "failed to get token price")
+		return nil, err
+	}
+
+	amountFrom := utils.ConvertStringBigIntToFloat(fromTokenPrice.Price, fromToken.Decimals)
+	amountTo := utils.ConvertStringBigIntToFloat(toTokenPrice.Price, toToken.Decimals)
+
 	convertTokenPrice := model.ConvertTokenPrice{}
-
-	// calculate amount to
-	fromTokenPrice, err := t.store.Token.GetTokenPriceDetail(from)
-	if err != nil {
-		return nil, err
-	}
-	toTokenPrice, err := t.store.Token.GetTokenPriceDetail(to)
-	if err != nil {
-		return nil, err
-	}
-
-	priceFromToken := new(big.Int)
-	priceFromToken, ok := priceFromToken.SetString(fromTokenPrice.Price, 10)
-	if !ok {
-		return nil, errors.New("failed to convert big int")
-	}
-	priceToToken := new(big.Int)
-	priceToToken, ok = priceToToken.SetString(toTokenPrice.Price, 10)
-	if !ok {
-		return nil, errors.New("failed to convert big int")
-	}
-
-	amountFromToken, err := strconv.ParseFloat(amount, 64)
-	if err != nil {
-		return nil, err
-	}
-
-	decimalFromToken := new(big.Int)
-	decimalFromToken = decimalFromToken.SetInt64(int64(math.Pow10(fromTokenPrice.Decimals)))
-	if !ok {
-		return nil, errors.New("failed to convert big int")
-	}
-
-	decimalToToken := new(big.Int)
-	decimalToToken = decimalToToken.SetInt64(int64(math.Pow10(toTokenPrice.Decimals)))
-	if !ok {
-		return nil, errors.New("failed to convert big int")
-	}
-
-	divisionFrom := new(big.Int).Div(priceFromToken, decimalFromToken)
-	divisionTo := new(big.Int).Div(priceToToken, decimalToToken)
-
-	amountToToken := amountFromToken * float64(divisionFrom.Int64()) / float64(divisionTo.Int64())
-
 	// fetch data
-	amountTo := fmt.Sprintf("%f", amountToToken)
-	convertTokenPrice.From.Amount = amount
-	convertTokenPrice.From.Symbol = from
-	convertTokenPrice.From.Name = fromTokenPrice.Name
+	amountToToken := fmt.Sprintf("%f", amountFrom/amountTo)
+	convertTokenPrice.From.Amount = req.Amount
+	convertTokenPrice.From.Symbol = req.From
 
-	convertTokenPrice.To.Amount = amountTo
-	convertTokenPrice.To.Symbol = to
-	convertTokenPrice.To.Name = toTokenPrice.Name
+	convertTokenPrice.To.Amount = amountToToken
+	convertTokenPrice.To.Symbol = req.To
 
 	return &convertTokenPrice, nil
+}
+
+func (t *tokenEntity) GetAndCacheTokenPrice(req request.ConvertTokenPrice, fromToken *model.Token, toToken *model.Token) (*model.TokenPrice, *model.TokenPrice, error) {
+	now := time.Now().UTC()
+	cacheTime := now.Add(-time.Minute * 30).Format("2006-01-02T15:04:05Z")
+	// calculate amount to
+	fromTokenPrice, err := t.store.Token.GetTokenPriceDetail(fromToken.Id, cacheTime)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token price detail")
+		return nil, nil, err
+	}
+
+	if err == gorm.ErrRecordNotFound {
+		fromTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(fromToken.Address)
+		if err != nil {
+			logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token birdeye price")
+			return nil, nil, err
+		}
+
+		fromTokenPrice = &model.TokenPrice{
+			TokenId: fromToken.Id,
+			Price:   utils.ConvertFloatToStringBigInt(fromTokenBirdeyePrice.Data.Value, fromToken.Decimals),
+			Time:    time.Unix(fromTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+		}
+
+		err = t.store.Token.CreateTokenPrice(fromTokenPrice)
+		if err != nil {
+			logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to create from token price")
+			return nil, nil, err
+		}
+	}
+
+	toTokenPrice, err := t.store.Token.GetTokenPriceDetail(toToken.Id, cacheTime)
+	if err != nil && err != gorm.ErrRecordNotFound {
+		logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to get to token price detail")
+		return nil, nil, err
+	}
+
+	if err == gorm.ErrRecordNotFound {
+		toTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(toToken.Address)
+		if err != nil {
+			logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to get to token birdeye price")
+			return nil, nil, err
+		}
+		toTokenPrice = &model.TokenPrice{
+			TokenId: toToken.Id,
+			Price:   utils.ConvertFloatToStringBigInt(toTokenBirdeyePrice.Data.Value, toToken.Decimals),
+			Time:    time.Unix(toTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+		}
+
+		err = t.store.Token.CreateTokenPrice(toTokenPrice)
+		if err != nil {
+			logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to create frtoom token price")
+			return nil, nil, err
+		}
+	}
+
+	return fromTokenPrice, toTokenPrice, nil
 }

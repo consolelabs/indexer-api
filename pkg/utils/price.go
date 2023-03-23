@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	"math"
 	"math/big"
 
@@ -31,4 +32,18 @@ func StringWeiToEther(stringWei string, decimals int) *big.Float {
 	wei := new(big.Int)
 	wei.SetString(stringWei, 10)
 	return WeiToEther(wei, decimals)
+}
+
+func ConvertFloatToStringBigInt(value float64, decimals int64) string {
+	bigFloatValue := big.NewFloat(math.Floor(value * math.Pow(10, float64(decimals))))
+	return fmt.Sprintf("%.0f", bigFloatValue)
+}
+
+func ConvertStringBigIntToFloat(value string, decimals int64) float64 {
+	bigIntValue := new(big.Int)
+	bigIntValue.SetString(value, 10)
+	bigFloatValue := new(big.Float)
+	bigFloatValue.SetInt(bigIntValue)
+	res, _ := bigFloatValue.Quo(bigFloatValue, big.NewFloat(math.Pow(10, float64(decimals)))).Float64()
+	return res
 }
