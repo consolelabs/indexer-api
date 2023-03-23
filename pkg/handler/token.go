@@ -17,7 +17,7 @@ func (h *Handler) GetConvertTokenPrice(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response.CreateResponse[any](nil, nil, err, body))
 		return
 	}
-	convertTokenPrice, err := h.entities.Token.GetConvertTokenPrice(body.Amount, body.From, body.To)
+	convertTokenPrice, err := h.entities.Token.GetConvertTokenPrice(body)
 	if err != nil {
 		h.logger.Fields(logger.Fields{
 			"amount": body.Amount,

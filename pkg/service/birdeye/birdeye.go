@@ -93,3 +93,31 @@ func (b *Birdeye) fetchTokenPriceByAddress(token *model.Token, date string) (*mo
 	}
 	return res, nil
 }
+
+func (b *Birdeye) GetCurrentPrice(tokenAddress string) (*model.BirdeyeCurrentPriceData, error) {
+	var client = &http.Client{}
+	request, err := http.NewRequest("GET", fmt.Sprintf("%s/public/price?address=%s", b.config.Birdeye.Api, tokenAddress), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	request.Header.Add("Content-Type", "application/json")
+
+	response, err := client.Do(request)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer response.Body.Close()
+	resBody, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+	res := &model.BirdeyeCurrentPriceData{}
+	err = json.Unmarshal(resBody, res)
+	if err != nil {
+		return nil, err
+	}
+	return res, nil
+}

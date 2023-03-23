@@ -10,3 +10,14 @@ type BirdeyeHistoryPrice struct {
 	} `json:"data"`
 	Success bool `json:"success"`
 }
+
+type BirdeyeCurrentPriceData struct {
+	Data    BirdeyeCurrentPrice `json:"data"`
+	Success bool                `json:"success"`
+}
+
+type BirdeyeCurrentPrice struct {
+	Value           float64 `json:"value"`
+	UpdateUnixTime  int64   `json:"updateUnixTime"`
+	UpdateHumanTime string  `json:"updateHumanTime"`
+}
