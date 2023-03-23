@@ -1,11 +1,13 @@
 package model
 
-type TokenPriceDetail struct {
-	TokenId  int    `json:"token_id"`
-	Price    string `json:"price"`
-	Symbol   string `json:"symbol"`
-	Name     string `json:"name"`
-	Decimals int    `json:"decimals"`
+import "time"
+
+type TokenPrice struct {
+	TokenId   int64     `json:"token_id"`
+	Price     string    `json:"price"`
+	Time      time.Time `json:"time"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 type ConvertTokenPrice struct {
