@@ -2,6 +2,7 @@ package token
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"gorm.io/gorm"
@@ -49,7 +50,8 @@ func (t *tokenEntity) GetConvertTokenPrice(req request.ConvertTokenPrice) (*mode
 
 	convertTokenPrice := model.ConvertTokenPrice{}
 	// fetch data
-	amountToToken := fmt.Sprintf("%f", amountFrom/amountTo)
+	originalAmount, _ := strconv.ParseFloat(req.Amount, 64)
+	amountToToken := fmt.Sprintf("%f", originalAmount*(amountFrom/amountTo))
 	convertTokenPrice.From.Amount = req.Amount
 	convertTokenPrice.From.Symbol = req.From
 
@@ -70,16 +72,29 @@ func (t *tokenEntity) GetAndCacheTokenPrice(req request.ConvertTokenPrice, fromT
 	}
 
 	if err == gorm.ErrRecordNotFound {
-		fromTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(fromToken.Address)
-		if err != nil {
-			logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token birdeye price")
-			return nil, nil, err
-		}
+		if fromToken.Address != "0x0000000000000000000000000000000000000000" {
+			fromTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(fromToken.Address)
+			if err != nil {
+				logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token birdeye price")
+				return nil, nil, err
+			}
 
-		fromTokenPrice = &model.TokenPrice{
-			TokenId: fromToken.Id,
-			Price:   utils.ConvertFloatToStringBigInt(fromTokenBirdeyePrice.Data.Value, fromToken.Decimals),
-			Time:    time.Unix(fromTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+			fromTokenPrice = &model.TokenPrice{
+				TokenId: fromToken.Id,
+				Price:   utils.ConvertFloatToStringBigInt(fromTokenBirdeyePrice.Data.Value, fromToken.Decimals),
+				Time:    time.Unix(fromTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+			}
+		} else {
+			fromTokenCoingeckoPrice, err := t.service.Coingecko.GetCurrentPrice(fromToken.CoingeckoId)
+			if err != nil {
+				logger.L.Fields(logger.Fields{"fromToken": req.From}).Error(err, "failed to get from token coingecko price")
+				return nil, nil, err
+			}
+			fromTokenPrice = &model.TokenPrice{
+				TokenId: fromToken.Id,
+				Price:   utils.ConvertFloatToStringBigInt(fromTokenCoingeckoPrice, fromToken.Decimals),
+				Time:    time.Now().UTC(),
+			}
 		}
 
 		err = t.store.Token.CreateTokenPrice(fromTokenPrice)
@@ -96,15 +111,28 @@ func (t *tokenEntity) GetAndCacheTokenPrice(req request.ConvertTokenPrice, fromT
 	}
 
 	if err == gorm.ErrRecordNotFound {
-		toTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(toToken.Address)
-		if err != nil {
-			logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to get to token birdeye price")
-			return nil, nil, err
-		}
-		toTokenPrice = &model.TokenPrice{
-			TokenId: toToken.Id,
-			Price:   utils.ConvertFloatToStringBigInt(toTokenBirdeyePrice.Data.Value, toToken.Decimals),
-			Time:    time.Unix(toTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+		if toToken.Address != "0x0000000000000000000000000000000000000000" {
+			toTokenBirdeyePrice, err := t.service.Birdeye.GetCurrentPrice(toToken.Address)
+			if err != nil {
+				logger.L.Fields(logger.Fields{"toToken": req.To}).Error(err, "failed to get to token birdeye price")
+				return nil, nil, err
+			}
+			toTokenPrice = &model.TokenPrice{
+				TokenId: toToken.Id,
+				Price:   utils.ConvertFloatToStringBigInt(toTokenBirdeyePrice.Data.Value, toToken.Decimals),
+				Time:    time.Unix(toTokenBirdeyePrice.Data.UpdateUnixTime, 0).UTC(),
+			}
+		} else {
+			toTokenCoingeckoPrice, err := t.service.Coingecko.GetCurrentPrice(toToken.CoingeckoId)
+			if err != nil {
+				logger.L.Fields(logger.Fields{"toToken": req.From}).Error(err, "failed to get to token coingecko price")
+				return nil, nil, err
+			}
+			toTokenPrice = &model.TokenPrice{
+				TokenId: toToken.Id,
+				Price:   utils.ConvertFloatToStringBigInt(toTokenCoingeckoPrice, fromToken.Decimals),
+				Time:    time.Now().UTC(),
+			}
 		}
 
 		err = t.store.Token.CreateTokenPrice(toTokenPrice)
