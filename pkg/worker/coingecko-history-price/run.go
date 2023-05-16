@@ -50,6 +50,8 @@ func executeIndexingCoingeckoHistoryPrice(wg *sync.WaitGroup, cfg *config.Config
 		return
 	}
 
+	startDate := time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
+
 	if len(latestSnapshot) > 0 {
 		if latestSnapshot[0].Time.Day() == time.Now().Day() && latestSnapshot[0].Time.Month() == time.Now().Month() && latestSnapshot[0].Time.Year() == time.Now().Year() {
 			logger.L.Fields(logger.Fields{"token": token.Symbol}).Info("Token already indexed today")
@@ -57,10 +59,10 @@ func executeIndexingCoingeckoHistoryPrice(wg *sync.WaitGroup, cfg *config.Config
 			time.Sleep(30 * time.Minute)
 			return
 		}
+		startDate = latestSnapshot[0].Time.AddDate(0, 0, 1)
 	}
 
 	// TODO: make this can be config
-	startDate := time.Date(2023, 1, 1, 0, 0, 0, 0, time.UTC)
 	now := time.Now()
 	listDate := genrateListDate(startDate, now)
 	for _, date := range listDate {
