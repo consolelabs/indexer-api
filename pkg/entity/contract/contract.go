@@ -50,7 +50,7 @@ func (e *contractEntity) AddContract(contract model.Contract, name string, symbo
 		ercFormat = ""
 	}
 	// store nft collection
-	if contract.ChainId != 9999 {
+	if contract.ChainId != 9999 && contract.ChainId != 9996 {
 		err = e.store.Nft.SaveNftCollection(&model.NftCollection{
 			Address:         contract.Address,
 			ChainId:         int64(contract.ChainId),
