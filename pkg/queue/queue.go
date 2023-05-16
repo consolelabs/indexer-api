@@ -180,6 +180,8 @@ func (q *Queue) ConsumerGroup(chainId int64) string {
 		return q.cfg.Kafka.RoninConsumerGroup
 	case 9997:
 		return q.cfg.Kafka.SuiConsumerGroup
+	case 9996:
+		return q.cfg.Kafka.AptosConsumerGroup
 	case 1975:
 		return q.cfg.Kafka.OnusConsumerGroup
 	default:
