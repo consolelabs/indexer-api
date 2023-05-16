@@ -47,6 +47,7 @@ func (h *Handler) GetNftDetail(c *gin.Context) {
 
 	// entity
 	nft, err := h.entities.Nft.GetTokenDetail(params.Address, params.TokenID)
+
 	if utils.IsRecordNotFound(err) {
 		l.Error(err, "NFT token not found")
 		c.JSON(http.StatusNotFound, response.CreateResponse[any](nil, nil, err, nil))
@@ -447,6 +448,7 @@ func (h *Handler) GetNftTokenTransactionHistory(c *gin.Context) {
 	}
 
 	txHistory, err := h.entities.Nft.GetNftTokenTransactionHistory(params.Address, params.TokenID)
+
 	if err != nil {
 		h.logger.Fields(logger.Fields{
 			"address": params.Address,
