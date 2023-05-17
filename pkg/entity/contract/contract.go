@@ -24,8 +24,11 @@ func New(store *store.Store, service *service.Service) IContractEntity {
 }
 
 func (e *contractEntity) AddContract(contract model.Contract, name string, symbol string) error {
-	oldContract, _ := e.store.Contract.GetByAddress(contract.Address)
-	if oldContract != nil {
+	_, errContract := e.store.Contract.GetByAddressAndChainId(contract.Address, contract.ChainId)
+	if errContract != nil && errContract.Error() != "record not found" {
+		return errContract
+	}
+	if errContract == nil {
 		return errors.New("address has been added")
 	}
 

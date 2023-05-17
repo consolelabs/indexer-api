@@ -39,3 +39,7 @@ func (s *store) GetByAddress(address string) (*model.Contract, error) {
 	}
 	return &contract, nil
 }
+
+func (s *store) GetByAddressAndChainId(address string, chainId int64) (contract *model.Contract, err error) {
+	return contract, s.db.Table("contract").Where("address = ? and chain_id = ?", address, chainId).First(&contract).Error
+}
