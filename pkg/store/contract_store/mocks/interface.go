@@ -58,6 +58,20 @@ func (m *MockIContract) GetByAddress(address string) (*model.Contract, error) {
 	return ret0, ret1
 }
 
+func (m *MockIContract) GetByAddressAndChainId(address string, chainId int64) (contract *model.Contract, err error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetByAddressAndChainId", address, chainId)
+	ret0, _ := ret[0].(*model.Contract)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetByAddressAndChainId indicates an expected call of GetByAddressAndChainId.
+func (mr *MockIContractMockRecorder) GetByAddressAndChainId(address interface{}, chainId interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetByAddressAndChainId", reflect.TypeOf((*MockIContract)(nil).GetByAddressAndChainId), address)
+}
+
 // GetByAddress indicates an expected call of GetByAddress.
 func (mr *MockIContractMockRecorder) GetByAddress(address interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()

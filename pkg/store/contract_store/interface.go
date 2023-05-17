@@ -7,4 +7,5 @@ type IContract interface {
 	Save(new *model.Contract) (err error)
 	// Update(new *model.Contract) (err error)
 	GetByAddress(address string) (contract *model.Contract, err error)
+	GetByAddressAndChainId(address string, chainId int64) (contract *model.Contract, err error)
 }
