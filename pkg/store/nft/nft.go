@@ -154,24 +154,7 @@ func (s *store) GetCollections(q NftCollectionQuery) ([]model.NftCollection, int
 		"vnc.owners",
 		"vnc.chain",
 		"vnc.marketplace_collections",
-		"stats.floor_price",
-		"stats.one_day_volume",
-		"stats.one_day_volume_change",
-		"stats.seven_day_volume",
-		"stats.seven_day_volume_change",
-		"stats.thirty_day_volume",
-		"stats.thirty_day_volume_change",
-		"stats.all_time_volume",
-		"stats.all_time_volume_change",
-		"token.symbol",
-		"token.address",
-		"token.is_native",
-		"token.decimals",
-		"token.icon_url",
-	).
-		Joins("LEFT JOIN view_nft_collection_stats stats ON vnc.address = stats.address").
-		Joins("LEFT JOIN token ON stats.payment_token = token.id").
-		Joins("LEFT JOIN contract ON vnc.address = contract.address")
+	)
 
 	if q.Synced != nil && *q.Synced {
 		db = db.Where("contract.last_updated_block > 0")
